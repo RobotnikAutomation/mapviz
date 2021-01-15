@@ -13,6 +13,7 @@ set(DEPENDENCIES
   marti_visualization_msgs
   move_base_msgs
   nav_msgs
+  std_srvs
   map_msgs
   pluginlib 
   roscpp 
