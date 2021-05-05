@@ -87,6 +87,7 @@ set(UI_FILES
     ui/laserscan_config.ui
     ui/marker_config.ui
     ui/measuring_config.ui
+    ui/mission_command_config.ui
     ui/move_base_config.ui
     ui/navsat_config.ui
     ui/object_config.ui
@@ -118,6 +119,7 @@ set(SRC_FILES
     src/laserscan_plugin.cpp
     src/marker_plugin.cpp 
     src/measuring_plugin.cpp 
+    src/mission_command_plugin.cpp
     src/move_base_plugin.cpp
     src/navsat_plugin.cpp
     src/object_plugin.cpp
@@ -150,6 +152,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/laserscan_plugin.h
     include/${PROJECT_NAME}/marker_plugin.h
     include/${PROJECT_NAME}/measuring_plugin.h
+    include/${PROJECT_NAME}/mission_command_plugin.h
     include/${PROJECT_NAME}/move_base_plugin.h
     include/${PROJECT_NAME}/navsat_plugin.h
     include/${PROJECT_NAME}/object_plugin.h

@@ -25,6 +25,9 @@
   <class name="mapviz_plugins/textured_marker" type="mapviz_plugins::TexturedMarkerPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Textured marker mapviz plugin.</description>
   </class>
+  <class name="mapviz_plugins/mission_command" type="mapviz_plugins::MissionCommandPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Interface to the [mission_command] action server.</description>
+  </class>
   <class name="mapviz_plugins/move_base" type="mapviz_plugins::MoveBasePlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Interface to the [move_base] action server.</description>
   </class>
