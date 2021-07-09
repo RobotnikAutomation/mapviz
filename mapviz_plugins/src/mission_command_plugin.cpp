@@ -81,11 +81,11 @@ MissionCommandPlugin::MissionCommandPlugin() :
     p3.setColor(QPalette::Text, Qt::green);
     ui_.status->setPalette(p3);
 
-    QObject::connect(ui_.pushButtonInitialPose, SIGNAL(&QPushButton::toggled),
-                     this, SLOT(&MissionCommandPlugin::on_pushButtonInitialPose_toggled));
+    // QObject::connect(ui_.pushButtonInitialPose, SIGNAL(&QPushButton::toggled),
+    //                  this, SLOT(&MissionCommandPlugin::on_pushButtonInitialPose_toggled));
 
-    QObject::connect(ui_.pushButtonGoalPose, SIGNAL(&QPushButton::toggled),
-                     this, SLOT(&MissionCommandPlugin::on_pushButtonGoalPose_toggled));
+    // QObject::connect(ui_.pushButtonGoalPose, SIGNAL(&QPushButton::toggled),
+    //                  this, SLOT(&MissionCommandPlugin::on_pushButtonGoalPose_toggled));
 
     QObject::connect(ui_.pushButtonAccept, SIGNAL(clicked()),
                      this, SLOT(on_pushButtonAccept_clicked()));
@@ -150,8 +150,8 @@ void MissionCommandPlugin::timerCallback(const ros::TimerEvent &)
 {
     bool connected =  move_base_client_.isServerConnected();
     ui_.pushButtonAccept->setEnabled( connected );
-    ui_.pushButtonGoalPose->setEnabled( connected );
-    ui_.pushButtonInitialPose->setEnabled( connected );
+    // ui_.pushButtonGoalPose->setEnabled( connected );
+    // ui_.pushButtonInitialPose->setEnabled( connected );
 
     if(!connected)
     {
@@ -196,24 +196,24 @@ void MissionCommandPlugin::timerCallback(const ros::TimerEvent &)
 
 bool MissionCommandPlugin::handleMousePress(QMouseEvent* event)
 {
-    bool init_checked = ui_.pushButtonInitialPose->isChecked();
-    bool goal_checked = ui_.pushButtonGoalPose->isChecked();
-    if( !init_checked && !goal_checked)
-    {
-        return false;
-    }
+//     bool init_checked = ui_.pushButtonInitialPose->isChecked();
+//     bool goal_checked = ui_.pushButtonGoalPose->isChecked();
+//     if( !init_checked && !goal_checked)
+//     {
+//         return false;
+//     }
 
-    if (event->button() == Qt::LeftButton)
-    {
-        is_mouse_down_ = true;
-        arrow_angle_ = 0;
-#if QT_VERSION >= 0x050000
-      arrow_tail_position_= map_canvas_->MapGlCoordToFixedFrame( event->localPos() );
-#else
-      arrow_tail_position_= map_canvas_->MapGlCoordToFixedFrame( event->posF() );
-#endif
-        return true;
-    }
+//     if (event->button() == Qt::LeftButton)
+//     {
+//         is_mouse_down_ = true;
+//         arrow_angle_ = 0;
+// #if QT_VERSION >= 0x050000
+//       arrow_tail_position_= map_canvas_->MapGlCoordToFixedFrame( event->localPos() );
+// #else
+//       arrow_tail_position_= map_canvas_->MapGlCoordToFixedFrame( event->posF() );
+// #endif
+//         return true;
+//     }
     return false;
 }
 
@@ -241,46 +241,47 @@ bool MissionCommandPlugin::handleMouseRelease(QMouseEvent* event)
 
     is_mouse_down_ = false;
 
-    bool init_checked = ui_.pushButtonInitialPose->isChecked();
-    bool goal_checked = ui_.pushButtonGoalPose->isChecked();
-    if( !init_checked && !goal_checked)
-    {
-        return false;
-    }
+    // bool init_checked = ui_.pushButtonInitialPose->isChecked();
+    // bool goal_checked = ui_.pushButtonGoalPose->isChecked();
+    // if( !init_checked && !goal_checked)
+    // {
+    //     return false;
+    // }
 
-    tf::Quaternion quat = tf::createQuaternionFromYaw(arrow_angle_);
+    // tf::Quaternion quat = tf::createQuaternionFromYaw(arrow_angle_);
 
-    if( goal_checked ){
+    // if( goal_checked ){
 
-        move_base_msg_.action_goal.header.frame_id = target_frame_;
-        move_base_msg_.action_goal.header.stamp = ros::Time::now();
-        move_base_msg_.action_goal.goal_id.stamp = move_base_msg_.action_goal.header.stamp;
-        move_base_msg_.action_goal.goal_id.id = "mapviz_goal";
-        move_base_msg_.action_goal.goal.target_pose.header = move_base_msg_.action_goal.header;
+    //     move_base_msg_.action_goal.header.frame_id = target_frame_;
+    //     move_base_msg_.action_goal.header.stamp = ros::Time::now();
+    //     move_base_msg_.action_goal.goal_id.stamp = move_base_msg_.action_goal.header.stamp;
+    //     move_base_msg_.action_goal.goal_id.id = "mapviz_goal";
+    //     move_base_msg_.action_goal.goal.target_pose.header = move_base_msg_.action_goal.header;
 
-        geometry_msgs::Pose& pose = move_base_msg_.action_goal.goal.target_pose.pose;
-        pose.position.x = arrow_tail_position_.x();
-        pose.position.y = arrow_tail_position_.y();
-        pose.position.z = 0.0;
-        tf::quaternionTFToMsg( quat, pose.orientation );
+    //     geometry_msgs::Pose& pose = move_base_msg_.action_goal.goal.target_pose.pose;
+    //     pose.position.x = arrow_tail_position_.x();
+    //     pose.position.y = arrow_tail_position_.y();
+    //     pose.position.z = 0.0;
+    //     tf::quaternionTFToMsg( quat, pose.orientation );
 
-        move_base_client_.sendGoal(move_base_msg_.action_goal.goal);
-        ui_.pushButtonGoalPose->setChecked(false);
-        monitoring_action_state_ = true;
-    }
-    if( init_checked ){
-        geometry_msgs::PoseWithCovarianceStamped initpose;
-        initpose.header.frame_id = target_frame_;
-        initpose.header.stamp = ros::Time::now();
-        initpose.pose.pose.position.x = arrow_tail_position_.x();
-        initpose.pose.pose.position.y = arrow_tail_position_.y();
-        initpose.pose.pose.position.z = 0.0;
-        tf::quaternionTFToMsg( quat, initpose.pose.pose.orientation );
+    //     move_base_client_.sendGoal(move_base_msg_.action_goal.goal);
+    //     ui_.pushButtonGoalPose->setChecked(false);
+    //     monitoring_action_state_ = true;
+    // }
+    // if( init_checked ){
+    //     geometry_msgs::PoseWithCovarianceStamped initpose;
+    //     initpose.header.frame_id = target_frame_;
+    //     initpose.header.stamp = ros::Time::now();
+    //     initpose.pose.pose.position.x = arrow_tail_position_.x();
+    //     initpose.pose.pose.position.y = arrow_tail_position_.y();
+    //     initpose.pose.pose.position.z = 0.0;
+    //     tf::quaternionTFToMsg( quat, initpose.pose.pose.orientation );
 
-        init_pose_pub_.publish(initpose);
-        ui_.pushButtonInitialPose->setChecked(false);
-    }
-    return true;
+    //     init_pose_pub_.publish(initpose);
+    //     ui_.pushButtonInitialPose->setChecked(false);
+    // }
+    // return true;
+    return false;
 }
 
 
@@ -338,39 +339,39 @@ void MissionCommandPlugin::SaveConfig(YAML::Emitter& emitter, const std::string&
 
 void MissionCommandPlugin::on_pushButtonInitialPose_toggled(bool checked)
 {
-    const bool other_checked = ui_.pushButtonGoalPose->isChecked();
+    // const bool other_checked = ui_.pushButtonGoalPose->isChecked();
 
-    if(checked){
-        if(other_checked){
-            ui_.pushButtonGoalPose->setChecked(false);
-        }
-        else{
-            QPixmap cursor_pixmap = QPixmap(":/images/green-arrow.png");
-            QApplication::setOverrideCursor(QCursor(cursor_pixmap));
-        }
-    }
-    if( !checked && !other_checked )
-    {
-        QApplication::restoreOverrideCursor();
-    }
+    // if(checked){
+    //     if(other_checked){
+    //         ui_.pushButtonGoalPose->setChecked(false);
+    //     }
+    //     else{
+    //         QPixmap cursor_pixmap = QPixmap(":/images/green-arrow.png");
+    //         QApplication::setOverrideCursor(QCursor(cursor_pixmap));
+    //     }
+    // }
+    // if( !checked && !other_checked )
+    // {
+    //     QApplication::restoreOverrideCursor();
+    // }
 }
 
 void MissionCommandPlugin::on_pushButtonGoalPose_toggled(bool checked)
 {
-    const bool other_checked = ui_.pushButtonInitialPose->isChecked();
-    if(checked){
-        if( other_checked){
-            ui_.pushButtonInitialPose->setChecked(false);
-        }
-        else{
-            QPixmap cursor_pixmap = QPixmap(":/images/green-arrow.png");
-            QApplication::setOverrideCursor(QCursor(cursor_pixmap));
-        }
-    }
-    if( !checked && !other_checked )
-    {
-        QApplication::restoreOverrideCursor();
-    }
+    // const bool other_checked = ui_.pushButtonInitialPose->isChecked();
+    // if(checked){
+    //     if( other_checked){
+    //         ui_.pushButtonInitialPose->setChecked(false);
+    //     }
+    //     else{
+    //         QPixmap cursor_pixmap = QPixmap(":/images/green-arrow.png");
+    //         QApplication::setOverrideCursor(QCursor(cursor_pixmap));
+    //     }
+    // }
+    // if( !checked && !other_checked )
+    // {
+    //     QApplication::restoreOverrideCursor();
+    // }
 
 }
 

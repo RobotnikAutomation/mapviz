@@ -53,7 +53,7 @@
        </property>
       </widget>
      </item>
-     <item>
+     <!-- <item>
       <widget class="QPushButton" name="pushButtonInitialPose">
        <property name="minimumSize">
         <size>
@@ -120,7 +120,7 @@
         <bool>true</bool>
        </property>
       </widget>
-     </item>
+     </item> -->
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
