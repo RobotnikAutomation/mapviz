@@ -42,14 +42,45 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Accept [2D Nav Goal] execution&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Accept mission plan execution&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="text">
         <string>Accept</string>
        </property>
        <property name="icon">
         <iconset resource="../../mapviz/src/resources/icons.qrc">
-         <normaloff>:/images/accept-icon.png</normaloff>:/images/accept-icon.png</iconset>
+        <normaloff>:/images/accept-icon.png</normaloff>:/images/accept-icon.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCancel">
+       <property name="minimumSize">
+        <size>
+         <width>65</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cancel mission plan execution&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../mapviz/src/resources/icons.qrc">
+        <normaloff>:/images/remove-icon-th.png</normaloff>:/images/remove-icon-th.png</iconset>
        </property>
       </widget>
      </item>

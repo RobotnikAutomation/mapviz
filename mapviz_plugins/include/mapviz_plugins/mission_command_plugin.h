@@ -34,6 +34,7 @@
 #include <string>
 #include <vector>
 #include <mapviz/mapviz_plugin.h>
+#include <std_msgs/String.h>
 
 // QT libraries
 #include <QGLWidget>
@@ -96,6 +97,8 @@ namespace mapviz_plugins
     void on_pushButtonInitialPose_toggled(bool checked);
     void on_pushButtonGoalPose_toggled(bool checked);
     void on_pushButtonAccept_clicked();
+    void on_pushButtonCancel_clicked();
+    void GcsStatusCb(const std_msgs::String::ConstPtr& msg);
 
   private:
 
@@ -116,6 +119,7 @@ namespace mapviz_plugins
     bool monitoring_action_state_;
 
     ros::ServiceClient confirm_;
+    ros::Subscriber gcs_status_;
   };
 }
 

@@ -101,6 +101,7 @@ set(UI_FILES
     ui/robot_image_config.ui
     ui/route_config.ui
     ui/string_config.ui
+    ui/swarm_event_config.ui
     ui/textured_marker_config.ui
     ui/tf_frame_config.ui
     ui/topic_select.ui
@@ -135,6 +136,7 @@ set(SRC_FILES
     src/robot_image_plugin.cpp
     src/route_plugin.cpp
     src/string_plugin.cpp
+    src/swarm_event_plugin.cpp
     src/textured_marker_plugin.cpp
     src/tf_frame_plugin.cpp
 )
@@ -169,6 +171,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/robot_image_plugin.h
     include/${PROJECT_NAME}/route_plugin.h
     include/${PROJECT_NAME}/string_plugin.h
+    include/${PROJECT_NAME}/swarm_event_plugin.h
     include/${PROJECT_NAME}/textured_marker_plugin.h
     include/${PROJECT_NAME}/tf_frame_plugin.h
 )

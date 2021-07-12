@@ -64,9 +64,9 @@ MissionCommandPlugin::MissionCommandPlugin() :
     move_base_client_("move_base", true),
     monitoring_action_state_(false)
 {
-    init_pose_pub_ = nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("/initialpose", 1, false);
 
     confirm_ = nh_.serviceClient<std_srvs::SetBool>("/confirm");
+    gcs_status_ = nh_.subscribe("/gcs_mission_status", 1, &MissionCommandPlugin::GcsStatusCb, this);
 
     ui_.setupUi(config_widget_);
 
@@ -89,6 +89,9 @@ MissionCommandPlugin::MissionCommandPlugin() :
 
     QObject::connect(ui_.pushButtonAccept, SIGNAL(clicked()),
                      this, SLOT(on_pushButtonAccept_clicked()));
+
+    QObject::connect(ui_.pushButtonCancel, SIGNAL(clicked()),
+                     this, SLOT(on_pushButtonCancel_clicked()));
 
     timer_ = nh_.createTimer(ros::Duration(1.0), &MissionCommandPlugin::timerCallback, this);
 
@@ -150,47 +153,48 @@ void MissionCommandPlugin::timerCallback(const ros::TimerEvent &)
 {
     bool connected =  move_base_client_.isServerConnected();
     ui_.pushButtonAccept->setEnabled( connected );
+    ui_.pushButtonCancel->setEnabled( connected );
     // ui_.pushButtonGoalPose->setEnabled( connected );
     // ui_.pushButtonInitialPose->setEnabled( connected );
 
-    if(!connected)
-    {
-        PrintErrorHelper( ui_.status, "[move_base] server not connected");
-    }
-    else if( !monitoring_action_state_ ){
-        PrintInfoHelper( ui_.status, "Ready to send command");
-    }
-    else{
-        actionlib::SimpleClientGoalState state = move_base_client_.getState();
-        switch( state.state_ )
-        {
-        case actionlib::SimpleClientGoalState::PENDING:
-            PrintWarningHelper( ui_.status, state.toString() );
-            break;
+    // if(!connected)
+    // {
+    //     PrintErrorHelper( ui_.status, "[move_base] server not connected");
+    // }
+    // else if( !monitoring_action_state_ ){
+    //     PrintInfoHelper( ui_.status, "Ready to send command");
+    // }
+    // else{
+    //     actionlib::SimpleClientGoalState state = move_base_client_.getState();
+    //     switch( state.state_ )
+    //     {
+    //     case actionlib::SimpleClientGoalState::PENDING:
+    //         PrintWarningHelper( ui_.status, state.toString() );
+    //         break;
 
-        case actionlib::SimpleClientGoalState::PREEMPTED:
-            PrintWarningHelper( ui_.status, state.toString() );
-            monitoring_action_state_ = false;
-            break;
+    //     case actionlib::SimpleClientGoalState::PREEMPTED:
+    //         PrintWarningHelper( ui_.status, state.toString() );
+    //         monitoring_action_state_ = false;
+    //         break;
 
-        case actionlib::SimpleClientGoalState::ACTIVE:
-            PrintInfoHelper( ui_.status, state.toString() );
-            break;
+    //     case actionlib::SimpleClientGoalState::ACTIVE:
+    //         PrintInfoHelper( ui_.status, state.toString() );
+    //         break;
 
-        case actionlib::SimpleClientGoalState::SUCCEEDED:
-            PrintInfoHelper( ui_.status, state.toString() );
-            monitoring_action_state_ = false;
-            break;
+    //     case actionlib::SimpleClientGoalState::SUCCEEDED:
+    //         PrintInfoHelper( ui_.status, state.toString() );
+    //         monitoring_action_state_ = false;
+    //         break;
 
-        case actionlib::SimpleClientGoalState::REJECTED:
-        case actionlib::SimpleClientGoalState::ABORTED:
-        case actionlib::SimpleClientGoalState::LOST:
-        case actionlib::SimpleClientGoalState::RECALLED:
-            PrintErrorHelper( ui_.status, state.toString() );
-            monitoring_action_state_ = false;
-            break;
-        }
-    }
+    //     case actionlib::SimpleClientGoalState::REJECTED:
+    //     case actionlib::SimpleClientGoalState::ABORTED:
+    //     case actionlib::SimpleClientGoalState::LOST:
+    //     case actionlib::SimpleClientGoalState::RECALLED:
+    //         PrintErrorHelper( ui_.status, state.toString() );
+    //         monitoring_action_state_ = false;
+    //         break;
+    //     }
+    // }
 }
 
 
@@ -381,6 +385,19 @@ void MissionCommandPlugin::on_pushButtonAccept_clicked()
     std_srvs::SetBool sb;
     sb.request.data = true;
     confirm_.call(sb);
+}
+
+void MissionCommandPlugin::on_pushButtonCancel_clicked()
+{
+    ROS_INFO("CLICK!");
+    std_srvs::SetBool sb;
+    sb.request.data = false;
+    confirm_.call(sb);
+}
+
+void MissionCommandPlugin::GcsStatusCb(const std_msgs::String::ConstPtr& msg)
+{
+    ui_.status->setText(msg->data.c_str());
 }
 
 }
