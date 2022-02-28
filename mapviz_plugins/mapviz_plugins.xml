@@ -1,11 +1,14 @@
 <library path="lib/libmapviz_plugins">
-  <class name="mapviz_plugins/attitude_indicator" 
-         type="mapviz_plugins::AttitudeIndicatorPlugin" 
+  <class name="mapviz_plugins/attitude_indicator"
+         type="mapviz_plugins::AttitudeIndicatorPlugin"
          base_class_type="mapviz::MapvizPlugin">
     <description>
       Plugin to provide an intuitive visualization of orientations
       from IMU messages, Odometry messages, and Tf messages.
     </description>
+  </class>
+  <class name="mapviz_plugins/autopilot_waypoints" type="mapviz_plugins::AutopilotWaypointsPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Plots autopilot waypoints.</description>
   </class>
   <class name="mapviz_plugins/coordinate_picker" type="mapviz_plugins::CoordinatePickerPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Prints clicked coordinates in specified frame and copies to clipboard.</description>
@@ -83,4 +86,3 @@
     <description>Display marti_nav_msgs::Obstacles and TrackedObjects</description>
   </class>
 </library>
-

@@ -14,18 +14,19 @@ set(DEPENDENCIES
   move_base_msgs
   nav_msgs
   map_msgs
-  pluginlib 
-  roscpp 
+  pluginlib
+  roscpp
   sensor_msgs
-  std_msgs 
+  std_msgs
   stereo_msgs
   swri_image_util
   swri_math_util
   swri_route_util
   swri_transform_util
   swri_yaml_util
-  tf 
+  tf
   visualization_msgs
+  autopilot_msgs
 )
 
 find_package(catkin REQUIRED COMPONENTS ${DEPENDENCIES})
@@ -76,6 +77,7 @@ include_directories(SYSTEM
 
 set(UI_FILES
     ui/attitude_indicator_config.ui
+    ui/autopilot_waypoints_config.ui
     ui/coordinate_picker_config.ui
     ui/disparity_config.ui
     ui/draw_polygon_config.ui
@@ -105,7 +107,8 @@ set(UI_FILES
 )
 
 set(SRC_FILES
-    src/attitude_indicator_plugin.cpp 
+    src/attitude_indicator_plugin.cpp
+    src/autopilot_waypoints_plugin.cpp
     src/canvas_click_filter.cpp
     src/coordinate_picker_plugin.cpp
     src/disparity_plugin.cpp
@@ -115,13 +118,13 @@ set(SRC_FILES
     src/grid_plugin.cpp
     src/image_plugin.cpp
     src/laserscan_plugin.cpp
-    src/marker_plugin.cpp 
-    src/measuring_plugin.cpp 
+    src/marker_plugin.cpp
+    src/measuring_plugin.cpp
     src/move_base_plugin.cpp
     src/navsat_plugin.cpp
     src/object_plugin.cpp
     src/occupancy_grid_plugin.cpp
-    src/odometry_plugin.cpp 
+    src/odometry_plugin.cpp
     src/path_plugin.cpp
     src/placeable_window_proxy.cpp
     src/plan_route_plugin.cpp
@@ -138,6 +141,7 @@ set(SRC_FILES
 
 set(HEADER_FILES
     include/${PROJECT_NAME}/attitude_indicator_plugin.h
+    include/${PROJECT_NAME}/autopilot_waypoints_plugin.h
     include/${PROJECT_NAME}/canvas_click_filter.h
     include/${PROJECT_NAME}/coordinate_picker_plugin.h
     include/${PROJECT_NAME}/disparity_plugin.h
@@ -204,4 +208,3 @@ install(TARGETS ${PROJECT_NAME}
 install(FILES ${PROJECT_NAME}.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
-
