@@ -28,6 +28,9 @@
   <class name="mapviz_plugins/textured_marker" type="mapviz_plugins::TexturedMarkerPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Textured marker mapviz plugin.</description>
   </class>
+  <class name="mapviz_plugins/mission_command" type="mapviz_plugins::MissionCommandPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Interface to the [mission_command] action server.</description>
+  </class>
   <class name="mapviz_plugins/move_base" type="mapviz_plugins::MoveBasePlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Interface to the [move_base] action server.</description>
   </class>
@@ -75,6 +78,9 @@
   </class>
   <class name="mapviz_plugins/string" type="mapviz_plugins::StringPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Displays a std_msgs/String at a fixed point on the canvas.</description>
+  </class>
+  <class name="mapviz_plugins/swarm_event" type="mapviz_plugins::SwarmEventPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Interface to the [swarm_event] action server.</description>
   </class>
   <class name="mapviz_plugins/float" type="mapviz_plugins::FloatPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Displays a float and velocity messages at a fixed point on the canvas.</description>
