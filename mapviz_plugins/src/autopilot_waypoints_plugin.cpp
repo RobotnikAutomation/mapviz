@@ -293,6 +293,32 @@ namespace mapviz_plugins
       selected_point_ = -1;
       return true;
     }
+  //   else if (is_mouse_down_)
+  //   {
+  // #if QT_VERSION >= 0x050000
+  //     qreal distance = QLineF(mouse_down_pos_, event->localPos()).length();
+  // #else
+  //     qreal distance = QLineF(mouse_down_pos_, event->posF()).length();
+  // #endif
+  //     qint64 msecsDiff = QDateTime::currentMSecsSinceEpoch() - mouse_down_time_;
+  //
+  //     // Only fire the event if the mouse has moved less than the maximum distance
+  //     // and was held for shorter than the maximum time..  This prevents click
+  //     // events from being fired if the user is dragging the mouse across the map
+  //     // or just holding the cursor in place.
+  //     if (msecsDiff < max_ms_ && distance <= max_distance_)
+  //     {
+  // #if QT_VERSION >= 0x050000
+  //       QPointF point = event->localPos();
+  // #else
+  //       QPointF point = event->posF();
+  // #endif
+  //
+  //       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
+  //       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
+  //       // vertices_.push_back(position);
+  //     }
+  //   }
     is_mouse_down_ = false;
     // Let other plugins process this event too
     return false;
