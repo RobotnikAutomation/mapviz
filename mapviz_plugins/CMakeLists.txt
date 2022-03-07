@@ -14,6 +14,7 @@ set(DEPENDENCIES
   marti_visualization_msgs
   move_base_msgs
   nav_msgs
+  std_srvs
   map_msgs
   pluginlib
   roscpp
@@ -89,6 +90,7 @@ set(UI_FILES
     ui/laserscan_config.ui
     ui/marker_config.ui
     ui/measuring_config.ui
+    ui/mission_command_config.ui
     ui/move_base_config.ui
     ui/navsat_config.ui
     ui/object_config.ui
@@ -103,6 +105,7 @@ set(UI_FILES
     ui/route_config.ui
     ui/send_gps_goal_config.ui
     ui/string_config.ui
+    ui/swarm_event_config.ui
     ui/textured_marker_config.ui
     ui/tf_frame_config.ui
     ui/topic_select.ui
@@ -120,8 +123,9 @@ set(SRC_FILES
     src/grid_plugin.cpp
     src/image_plugin.cpp
     src/laserscan_plugin.cpp
-    src/marker_plugin.cpp
-    src/measuring_plugin.cpp
+    src/marker_plugin.cpp 
+    src/measuring_plugin.cpp 
+    src/mission_command_plugin.cpp
     src/move_base_plugin.cpp
     src/navsat_plugin.cpp
     src/object_plugin.cpp
@@ -138,6 +142,7 @@ set(SRC_FILES
     src/route_plugin.cpp
     src/send_gps_goal_plugin.cpp
     src/string_plugin.cpp
+    src/swarm_event_plugin.cpp
     src/textured_marker_plugin.cpp
     src/tf_frame_plugin.cpp
 )
@@ -156,6 +161,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/laserscan_plugin.h
     include/${PROJECT_NAME}/marker_plugin.h
     include/${PROJECT_NAME}/measuring_plugin.h
+    include/${PROJECT_NAME}/mission_command_plugin.h
     include/${PROJECT_NAME}/move_base_plugin.h
     include/${PROJECT_NAME}/navsat_plugin.h
     include/${PROJECT_NAME}/object_plugin.h
@@ -173,6 +179,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/route_plugin.h
     include/${PROJECT_NAME}/send_gps_goal_plugin.h
     include/${PROJECT_NAME}/string_plugin.h
+    include/${PROJECT_NAME}/swarm_event_plugin.h
     include/${PROJECT_NAME}/textured_marker_plugin.h
     include/${PROJECT_NAME}/tf_frame_plugin.h
 )

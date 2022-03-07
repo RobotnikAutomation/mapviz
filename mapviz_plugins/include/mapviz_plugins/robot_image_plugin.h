@@ -50,6 +50,9 @@
 #include "ui_robot_image_config.h"
 #include "ui_topic_select.h"
 
+#include <swri_transform_util/local_xy_util.h>
+#include <sensor_msgs/NavSatFix.h>
+
 namespace mapviz_plugins
 {
   class RobotImagePlugin : public mapviz::MapvizPlugin
@@ -57,6 +60,23 @@ namespace mapviz_plugins
     Q_OBJECT
 
   public:
+    struct StampedPoint
+    {
+      StampedPoint(): transformed(false) {}
+
+      tf::Point point;
+      tf::Quaternion orientation;
+      tf::Point transformed_point;
+      tf::Point transformed_arrow_point;
+      tf::Point transformed_arrow_left;
+      tf::Point transformed_arrow_right;
+      std::string source_frame;
+      bool transformed;
+      ros::Time stamp;
+
+      std::vector<tf::Point> cov_points;
+      std::vector<tf::Point> transformed_cov_points;
+    };
     RobotImagePlugin();
     virtual ~RobotImagePlugin();
 
@@ -117,9 +137,14 @@ namespace mapviz_plugins
     tf::Point top_right_transformed_;
     tf::Point bottom_left_transformed_;
     tf::Point bottom_right_transformed_;
+    
+    ros::Subscriber navsat_sub_;
+    bool has_message_;
 
     void UpdateShape();
     void LoadImage();
+    void NavSatFixCallback(const sensor_msgs::NavSatFixConstPtr navsat);
+    StampedPoint stamped_point;
   };
 }
 

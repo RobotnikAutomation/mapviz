@@ -33,7 +33,7 @@
 #include <swri_yaml_util/yaml_util.h>
 
 #include <boost/shared_ptr.hpp>
-
+#include <std_srvs/SetBool.h>
 // Declare plugin
 #include <pluginlib/class_list_macros.h>
 PLUGINLIB_EXPORT_CLASS(mapviz_plugins::PointClickPublisherPlugin, mapviz::MapvizPlugin)
@@ -50,6 +50,9 @@ namespace mapviz_plugins
             this, SLOT(pointClicked(const QPointF&)));
     connect(ui_.topic, SIGNAL(textEdited(const QString&)),
             this, SLOT(topicChanged(const QString&)));
+    
+//    connect(ui_.accept_mission, SIGNAL(pressed()),
+//            this, SLOT(confirmMission()));
 
     frame_timer_.start(1000);
     connect(&frame_timer_, SIGNAL(timeout()), this, SLOT(updateFrames()));
@@ -70,6 +73,7 @@ namespace mapviz_plugins
 
     PrintInfo("Ready.");
 
+    confirm_ = node_.serviceClient<std_srvs::SetBool>("/confirm");
     return true;
   }
 
@@ -110,6 +114,8 @@ namespace mapviz_plugins
 
   void PointClickPublisherPlugin::pointClicked(const QPointF& point)
   {
+    confirmMission();
+
     QPointF transformed = canvas_->MapGlCoordToFixedFrame(point);
 
     std::string output_frame = ui_.outputframe->currentText().toStdString();
@@ -242,5 +248,14 @@ namespace mapviz_plugins
       index = ui_.outputframe->findText(current_output.c_str());
       ui_.outputframe->setCurrentIndex(index);
     }
+  }
+  
+  void PointClickPublisherPlugin::confirmMission()
+  {
+    ROS_INFO("CLICK!");
+    std_srvs::SetBool sb;
+    sb.request.data = true;
+    confirm_.call(sb);
+
   }
 }
