@@ -204,16 +204,19 @@ void SendGPSGoalPlugin::Clear()
 
 void SendGPSGoalPlugin::SendGoal()
 {
-  autopilot_msgs::GPSGoalGoal goal;
+  if(!ui_.gps_point->text().isEmpty())
+  {
+    autopilot_msgs::GPSGoalGoal goal;
 
-  QString input = ui_.gps_point->text();
-  std::vector<double> coordinates = Parse(input.toStdString());
-  goal.target.latitude = coordinates[0];
-  goal.target.longitude = coordinates[1];
+    QString input = ui_.gps_point->text();
+    std::vector<double> coordinates = Parse(input.toStdString());
+    goal.target.latitude = coordinates[0];
+    goal.target.longitude = coordinates[1];
 
-  if(gps_goal_ac_->isServerConnected())
-    gps_goal_ac_->sendGoal(goal);
-  vertices_.clear();
+    if(gps_goal_ac_->isServerConnected())
+      gps_goal_ac_->sendGoal(goal);
+    vertices_.clear();
+  }
 }
 
 std::vector<double> SendGPSGoalPlugin::Parse(std::string s)
