@@ -71,8 +71,8 @@ SendGPSGoalPlugin::SendGPSGoalPlugin()
   ui_.setupUi(config_widget_);
   ui_.goal_color->setColor(Qt::green);
 
-  QObject::connect(ui_.clear, SIGNAL(clicked()), this,
-                   SLOT(Clear()));
+  QObject::connect(ui_.cancel, SIGNAL(clicked()), this,
+                   SLOT(Cancel()));
   QObject::connect(ui_.send_goal, SIGNAL(clicked()),
                    this, SLOT(SendGoal()));
   QObject::connect(ui_.goal_color, SIGNAL(colorEdited(const QColor&)),
@@ -80,6 +80,11 @@ SendGPSGoalPlugin::SendGPSGoalPlugin()
   gps_goal_namespace_ = "autopilot_gps_goal_navigator/gps_goal_action";
   gps_goal_ac_.reset(
       new actionlib::SimpleActionClient<autopilot_msgs::GPSGoalAction>(node_, gps_goal_namespace_, true));
+
+  goal_sub_ = node_.subscribe("autopilot_gps_goal_navigator/gps_goal", 1, &SendGPSGoalPlugin::goalCallback, this);
+
+  accept_mission_pub_ = node_.advertise<std_msgs::Empty>("accept_goal", 1, true);
+  cancel_pub_ = node_.advertise<std_msgs::Empty>("cancel", 1, true);
 }
 
 SendGPSGoalPlugin::~SendGPSGoalPlugin()
@@ -171,18 +176,28 @@ bool SendGPSGoalPlugin::handleMouseRelease(QMouseEvent* event)
 
       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
+
       vertices_.clear();
       vertices_.push_back(position);
+
       if (!tf_manager_->LocalXyUtil()->Initialized())
       {
         return false;
       }
+      autopilot_msgs::GPSGoalGoal goal;
       double latitude;
       double longitude;
+
       tf_manager_->LocalXyUtil()->ToWgs84(position.x(), position.y(), latitude, longitude);
+
+      goal.target.latitude = latitude;
+      goal.target.longitude = longitude;
 
       std::string str_position = std::to_string(latitude) + " " + std::to_string(longitude);
       ui_.gps_point->setText(QString::fromStdString(str_position));
+
+      if(gps_goal_ac_->isServerConnected())
+      gps_goal_ac_->sendGoal(goal);
     }
   }
   is_mouse_down_ = false;
@@ -196,42 +211,44 @@ bool SendGPSGoalPlugin::handleMouseMove(QMouseEvent* event)
   return false;
 }
 
-void SendGPSGoalPlugin::Clear()
+void SendGPSGoalPlugin::goalCallback(const geographic_msgs::GeoPoint& msg)
 {
+  std::string str_position = std::to_string(msg.latitude) + " " + std::to_string(msg.longitude);
+  ui_.gps_point->setText(QString::fromStdString(str_position));
+
+  if (!tf_manager_->LocalXyUtil()->Initialized())
+  {
+    return;
+  }
+
+  vertices_.clear();
+
+  double x;
+  double y;
+  tf_manager_->LocalXyUtil()->ToLocalXy(msg.latitude, msg.longitude, x, y);
+  tf::Vector3 position(x, y, 0.0);
+  vertices_.push_back(position);
+
+  return;
+}
+
+void SendGPSGoalPlugin::Cancel()
+{
+  std_msgs::Empty msg;
   vertices_.clear();
   ui_.gps_point->clear();
+  cancel_pub_.publish(msg);
+  return;
 }
 
 void SendGPSGoalPlugin::SendGoal()
 {
   if(!ui_.gps_point->text().isEmpty())
   {
-    autopilot_msgs::GPSGoalGoal goal;
-
-    QString input = ui_.gps_point->text();
-    std::vector<double> coordinates = Parse(input.toStdString());
-    goal.target.latitude = coordinates[0];
-    goal.target.longitude = coordinates[1];
-
-    if(gps_goal_ac_->isServerConnected())
-      gps_goal_ac_->sendGoal(goal);
-    vertices_.clear();
+    std_msgs::Empty msg;
+    accept_mission_pub_.publish(msg);
   }
-}
-
-std::vector<double> SendGPSGoalPlugin::Parse(std::string s)
-{
-    std::size_t pos = 0;
-    std::vector<double> vd;
-    double d;
-
-    std::stringstream ss(s);
-  	std::locale loc(std::locale(), new My_punct);
-  	ss.imbue(loc);
-    while (ss >> d)
-        vd.push_back(d);
-
-    return vd;
+  return;
 }
 
 void SendGPSGoalPlugin::Draw(double x, double y, double scale)

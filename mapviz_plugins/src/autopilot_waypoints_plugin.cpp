@@ -35,6 +35,7 @@ namespace mapviz_plugins
   AutopilotWaypointsPlugin::AutopilotWaypointsPlugin():
     config_widget_(new QWidget()),
     selected_point_(-1),
+    index_(-1),
     is_mouse_down_(false),
     max_ms_(Q_INT64_C(500)),
     max_distance_(2.0),
@@ -117,6 +118,7 @@ namespace mapviz_plugins
     {
       return;
     }
+
     if (!has_message_)
     {
       initialized_ = true;
@@ -124,7 +126,14 @@ namespace mapviz_plugins
     }
 
     if (is_mouse_down_)
-    return;
+      return;
+
+    if(index_ >= 0)
+      if(waypoints->poses[index_].pose.position != new_coords_)
+      {
+        index_ = -1;
+        return;
+      }
 
     Clear();
 
@@ -167,7 +176,6 @@ namespace mapviz_plugins
     map_canvas_->installEventFilter(this);
 
     initialized_ = true;
-    PrintInfo("OK");
 
     return true;
   }
@@ -248,7 +256,7 @@ namespace mapviz_plugins
           ROS_ERROR("Failed to call service ModifyGPSWaypoint");
           return false;
         }
-        vertices_.erase(vertices_.begin() + closest_point);
+        // vertices_.erase(vertices_.begin() + closest_point);
         return true;
       }
     }
@@ -281,15 +289,18 @@ namespace mapviz_plugins
       srv.request.index = selected_point_;
       srv.request.new_pose.position.latitude = latitude;
       srv.request.new_pose.position.longitude = longitude;
+
+      index_ = selected_point_;
+      new_coords_.latitude = latitude;
+      new_coords_.longitude = longitude;
+
       if(!modify_waypoints_client_.call(srv))
       {
         ROS_ERROR("Failed to call service ModifyGPSWaypoint");
         return false;
       }
 
-      vertices_[selected_point_].setX(position.x());
-      vertices_[selected_point_].setY(position.y());
-
+      is_mouse_down_ = false;
       selected_point_ = -1;
       return true;
     }

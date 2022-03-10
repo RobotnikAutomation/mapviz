@@ -85,17 +85,21 @@ namespace mapviz_plugins
       bool handleMouseMove(QMouseEvent*);
 
     protected Q_SLOTS:
-      void Clear();
+      void Cancel();
       void SendGoal();
 
     private:
-      std::vector<double> Parse(std::string s);
+      void goalCallback(const geographic_msgs::GeoPoint& msg);
 
       Ui::send_gps_goal_config ui_;
       QWidget* config_widget_;
       mapviz::MapCanvas* map_canvas_;
 
       std::vector<tf::Vector3> vertices_;
+
+      ros::Subscriber goal_sub_;
+      ros::Publisher accept_mission_pub_;
+      ros::Publisher cancel_pub_;
 
       std::string gps_goal_namespace_;
       boost::scoped_ptr<actionlib::SimpleActionClient<autopilot_msgs::GPSGoalAction>> gps_goal_ac_;
