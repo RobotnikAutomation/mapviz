@@ -7,6 +7,9 @@
       from IMU messages, Odometry messages, and Tf messages.
     </description>
   </class>
+  <class name="mapviz_plugins/autopilot_emergency_button" type="mapviz_plugins::AutopilotEmergencyButtonPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Sends emergency stop signal.</description>
+  </class>
   <class name="mapviz_plugins/autopilot_waypoints" type="mapviz_plugins::AutopilotWaypointsPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Plots autopilot waypoints.</description>
   </class>

@@ -80,6 +80,7 @@ include_directories(SYSTEM
 set(UI_FILES
     ui/attitude_indicator_config.ui
     ui/autopilot_waypoints_config.ui
+    ui/autopilot_emergency_button_config.ui
     ui/coordinate_picker_config.ui
     ui/disparity_config.ui
     ui/draw_polygon_config.ui
@@ -114,6 +115,7 @@ set(UI_FILES
 set(SRC_FILES
     src/attitude_indicator_plugin.cpp
     src/autopilot_waypoints_plugin.cpp
+    src/autopilot_emergency_button_plugin.cpp
     src/canvas_click_filter.cpp
     src/coordinate_picker_plugin.cpp
     src/disparity_plugin.cpp
@@ -123,8 +125,8 @@ set(SRC_FILES
     src/grid_plugin.cpp
     src/image_plugin.cpp
     src/laserscan_plugin.cpp
-    src/marker_plugin.cpp 
-    src/measuring_plugin.cpp 
+    src/marker_plugin.cpp
+    src/measuring_plugin.cpp
     src/mission_command_plugin.cpp
     src/move_base_plugin.cpp
     src/navsat_plugin.cpp
@@ -150,6 +152,7 @@ set(SRC_FILES
 set(HEADER_FILES
     include/${PROJECT_NAME}/attitude_indicator_plugin.h
     include/${PROJECT_NAME}/autopilot_waypoints_plugin.h
+    include/${PROJECT_NAME}/autopilot_emergency_button_plugin.h
     include/${PROJECT_NAME}/canvas_click_filter.h
     include/${PROJECT_NAME}/coordinate_picker_plugin.h
     include/${PROJECT_NAME}/disparity_plugin.h
