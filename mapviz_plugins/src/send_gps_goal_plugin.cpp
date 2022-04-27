@@ -238,6 +238,7 @@ void SendGPSGoalPlugin::Cancel()
   vertices_.clear();
   ui_.gps_point->clear();
   cancel_pub_.publish(msg);
+  map_canvas_->installEventFilter(this);
   return;
 }
 
@@ -247,6 +248,7 @@ void SendGPSGoalPlugin::SendGoal()
   {
     std_msgs::Empty msg;
     accept_mission_pub_.publish(msg);
+    map_canvas_->removeEventFilter(this);
   }
   return;
 }
