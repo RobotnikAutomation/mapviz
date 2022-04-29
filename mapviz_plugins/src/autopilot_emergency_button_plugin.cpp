@@ -44,7 +44,7 @@ namespace mapviz_plugins
     QObject::connect(ui_.emergencybutton, SIGNAL(clicked()), this, SLOT(EmergencyStop()));
     QObject::connect(ui_.rearmbutton, SIGNAL(clicked()), this, SLOT(Rearm()));
 
-    emergency_stop_pub_ = node_.advertise<std_msgs::Bool>("robotnik_base_hw/emergency_stop", 1, true);
+    emergency_stop_pub_ = node_.advertise<std_msgs::Bool>("autopilot/emergency_stop", 1, true);
   }
 
   QWidget* AutopilotEmergencyButtonPlugin::GetConfigWidget(QWidget* parent)

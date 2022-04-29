@@ -19,7 +19,7 @@ namespace mapviz_plugins
 {
   AutopilotAutoManualButtonPlugin::AutopilotAutoManualButtonPlugin():
     config_widget_(new QWidget()),
-    is_auto_(false),
+    is_auto_(true),
     is_manual_(false)
   {
     ui_.setupUi(config_widget_);
@@ -30,7 +30,7 @@ namespace mapviz_plugins
     config_widget_->setPalette(p);
 
     p_auto_ = config_widget_->palette();
-    p_auto_.setColor(QPalette::Button, QColor(Qt::red));
+    p_auto_.setColor(QPalette::Button, QColor(Qt::green));
     ui_.automaticmodebutton->setAutoFillBackground(true);
     ui_.automaticmodebutton->setPalette(p_auto_);
     ui_.automaticmodebutton->update();
