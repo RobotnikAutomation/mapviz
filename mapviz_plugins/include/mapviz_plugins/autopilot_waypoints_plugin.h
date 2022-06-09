@@ -15,8 +15,10 @@
 // ROS libraries
 #include <ros/ros.h>
 #include <tf/transform_datatypes.h>
-#include <geographic_msgs/GeoPath.h>
+#include <autopilot_msgs/AutopilotGeoPath.h>
+#include <autopilot_msgs/AutopilotGeoPoseStamped.h>
 #include <autopilot_msgs/ModifyGPSWaypoint.h>
+#include <autopilot_msgs/AddGPSWaypoint.h>
 
 #include <mapviz/map_canvas.h>
 #include <mapviz_plugins/point_drawing_plugin.h>
@@ -62,7 +64,7 @@ namespace mapviz_plugins
     bool handleMousePress(QMouseEvent*);
     bool handleMouseRelease(QMouseEvent*);
     bool handleMouseMove(QMouseEvent*);
-    void waypointsCallback(const geographic_msgs::GeoPathConstPtr& waypoints);
+    void waypointsCallback(const autopilot_msgs::AutopilotGeoPathConstPtr& waypoints);
 
     protected Q_SLOTS:
     void Clear();
@@ -81,6 +83,7 @@ namespace mapviz_plugins
     tf::Vector3 last_position_;
     ros::Subscriber waypoints_sub_;
     ros::ServiceClient modify_waypoints_client_;
+    ros::ServiceClient add_waypoint_client_;
 
     std::vector<tf::Vector3> vertices_;
     std::vector<tf::Vector3> transformed_vertices_;
@@ -88,6 +91,7 @@ namespace mapviz_plugins
     int selected_point_;
     int index_;
     geographic_msgs::GeoPoint new_coords_;
+    std::vector<autopilot_msgs::AutopilotGeoPoseStamped> waypoints_array_;
     bool is_mouse_down_;
     QPointF mouse_down_pos_;
     qint64 mouse_down_time_;

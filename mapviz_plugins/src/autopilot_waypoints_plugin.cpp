@@ -42,6 +42,7 @@ namespace mapviz_plugins
     map_canvas_(NULL)
   {
     modify_waypoints_client_ = node_.serviceClient<autopilot_msgs::ModifyGPSWaypoint>("autopilot_gps_waypoints_navigator/modify_waypoint");
+    add_waypoint_client_ = node_.serviceClient<autopilot_msgs::AddGPSWaypoint>("autopilot_gps_waypoints_navigator/add_waypoint");
 
     ui_.setupUi(config_widget_);
     ui_.path_color->setColor(Qt::green);
@@ -81,7 +82,7 @@ namespace mapviz_plugins
   void AutopilotWaypointsPlugin::SelectTopic()
   {
     ros::master::TopicInfo topic =
-        mapviz::SelectTopicDialog::selectTopic("geographic_msgs/GeoPath");
+        mapviz::SelectTopicDialog::selectTopic("autopilot_msgs/AutopilotGeoPath");
 
     if (!topic.name.empty())
     {
@@ -112,7 +113,7 @@ namespace mapviz_plugins
     }
   }
 
-  void AutopilotWaypointsPlugin::waypointsCallback(const geographic_msgs::GeoPathConstPtr& waypoints)
+  void AutopilotWaypointsPlugin::waypointsCallback(const autopilot_msgs::AutopilotGeoPathConstPtr& waypoints)
   {
     if (!tf_manager_->LocalXyUtil()->Initialized())
     {
@@ -129,7 +130,7 @@ namespace mapviz_plugins
       return;
 
     if(index_ >= 0)
-      if(waypoints->poses[index_].pose.position != new_coords_)
+      if(waypoints->poses[index_].pose.pose.position != new_coords_)
       {
         index_ = -1;
         return;
@@ -137,11 +138,13 @@ namespace mapviz_plugins
 
     Clear();
 
+    waypoints_array_ = waypoints->poses;
+
     for (unsigned int i = 0; i < waypoints->poses.size(); i++)
     {
       double x;
       double y;
-      tf_manager_->LocalXyUtil()->ToLocalXy(waypoints->poses[i].pose.position.latitude, waypoints->poses[i].pose.position.longitude, x, y);
+      tf_manager_->LocalXyUtil()->ToLocalXy(waypoints->poses[i].pose.pose.position.latitude, waypoints->poses[i].pose.pose.position.longitude, x, y);
       tf::Vector3 position(x, y, 0.0);
       vertices_.push_back(position);
     }
@@ -328,6 +331,24 @@ namespace mapviz_plugins
   //       QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
   //       tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
   //       // vertices_.push_back(position);
+  //
+  //       if (!tf_manager_->LocalXyUtil()->Initialized())
+  //       {
+  //         return false;
+  //       }
+  //       double latitude;
+  //       double longitude;
+  //       tf_manager_->LocalXyUtil()->ToWgs84(position.x(), position.y(), latitude, longitude);
+  //
+  //       autopilot_msgs::AddGPSWaypoint srv;
+  //       srv.request.new_pose.position.latitude = latitude;
+  //       srv.request.new_pose.position.longitude = longitude;
+  //
+  //       if(!add_waypoint_client_.call(srv))
+  //       {
+  //         ROS_ERROR("Failed to call service AddGPSWaypoint");
+  //         return false;
+  //       }
   //     }
   //   }
     is_mouse_down_ = false;
@@ -356,23 +377,35 @@ namespace mapviz_plugins
 
   void AutopilotWaypointsPlugin::Draw(double x, double y, double scale)
   {
+    int iterator = 0;
     glLineWidth(10);
-    const QColor color = ui_.path_color->color();
-    glColor4d(color.redF(), color.greenF(), color.blueF(), ui_.alpha->value()/2.0);
+    QColor color = ui_.path_color->color();
+    // glColor4d(color.redF(), color.greenF(), color.blueF(), ui_.alpha->value()/2.0);
     glBegin(GL_LINE_STRIP);
 
     for (const auto& vertex: vertices_)
     {
+      if(waypoints_array_[iterator].visited == true)
+        color = QColor(Qt::green);
+      else
+        color = ui_.path_color->color();
+
+      glColor4d(color.redF(), color.greenF(), color.blueF(), ui_.alpha->value()/2.0);
+
       glVertex2d(vertex.x(), vertex.y());
+
+      iterator++;
     }
 
     glEnd();
 
     glBegin(GL_LINES);
 
-    glColor4d(color.redF(), color.greenF(), color.blueF(), 1.0);
+    // glColor4d(color.redF(), color.greenF(), color.blueF(), 1.0);
 
     glEnd();
+
+    iterator = 0;
 
     // Draw vertices
     glPointSize(20);
@@ -380,7 +413,16 @@ namespace mapviz_plugins
 
     for (const auto& vertex: vertices_)
     {
+      if(waypoints_array_[iterator].visited == true)
+        color = QColor(Qt::green);
+      else
+        color = ui_.path_color->color();
+
+      glColor4d(color.redF(), color.greenF(), color.blueF(), 1.0);
+
       glVertex2d(vertex.x(), vertex.y());
+
+      iterator++;
     }
     glEnd();
 
