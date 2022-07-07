@@ -943,7 +943,7 @@ void Mapviz::ClearHistory()
   ROS_DEBUG("Mapviz::ClearHistory()");
   for (auto& plugin: plugins_)
   {
-    plugin.second->ClearHistory();  
+    plugin.second->ClearHistory();
   }
 }
 
