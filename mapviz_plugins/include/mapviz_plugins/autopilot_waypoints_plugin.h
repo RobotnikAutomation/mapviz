@@ -15,6 +15,8 @@
 // ROS libraries
 #include <ros/ros.h>
 #include <tf/transform_datatypes.h>
+#include <actionlib/client/simple_action_client.h>
+#include <autopilot_msgs/GPSGoalAction.h>
 #include <autopilot_msgs/AutopilotGeoPath.h>
 #include <autopilot_msgs/AutopilotGeoPoseStamped.h>
 #include <autopilot_msgs/ModifyGPSWaypoint.h>
@@ -71,28 +73,40 @@ namespace mapviz_plugins
     void SelectTopic();
     void TopicEdited();
     void AlphaChanged(double) { };
+    void Cancel();
+    void SendGoal();
+    void AddPoint();
+    void RemovePoint();
 
     private:
+    // void goalCallback(const geographic_msgs::GeoPoint& msg);
+
     Ui::autopilot_waypoints_config ui_;
     QWidget* config_widget_;
-
-    std::string topic_;
-    bool has_message_;
 
     mapviz::MapCanvas* map_canvas_;
     tf::Vector3 last_position_;
     ros::Subscriber waypoints_sub_;
+    // ros::Subscriber goal_sub_;
+    ros::Publisher accept_mission_pub_;
+    ros::Publisher cancel_pub_;
     ros::ServiceClient modify_waypoints_client_;
     ros::ServiceClient add_waypoint_client_;
+
+    boost::scoped_ptr<actionlib::SimpleActionClient<autopilot_msgs::GPSGoalAction>> gps_goal_ac_;
 
     std::vector<tf::Vector3> vertices_;
     std::vector<tf::Vector3> transformed_vertices_;
 
     int selected_point_;
     int index_;
+    std::string topic_;
+    std::string gps_goal_namespace_;
     geographic_msgs::GeoPoint new_coords_;
     std::vector<autopilot_msgs::AutopilotGeoPoseStamped> waypoints_array_;
-    bool is_mouse_down_;
+    bool has_message_;
+    bool is_mouse_down_, add_point_flag_, remove_point_flag_, is_point_to_remove_;
+    QPalette p_addpoint_, p_remove_;
     QPointF mouse_down_pos_;
     qint64 mouse_down_time_;
 

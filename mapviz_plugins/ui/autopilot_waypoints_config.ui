@@ -23,7 +23,223 @@
    <property name="margin">
     <number>2</number>
    </property>
+   <item row="2" column="0">
+     <widget class="QLabel" name="label">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>8</pointsize>
+         </font>
+       </property>
+       <property name="text">
+         <string>Topic:</string>
+       </property>
+     </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="topic">
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+     <widget class="QPushButton" name="selecttopic">
+       <property name="maximumSize">
+         <size>
+           <width>55</width>
+           <height>16777215</height>
+         </size>
+       </property>
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>8</pointsize>
+         </font>
+       </property>
+       <property name="styleSheet">
+         <string notr="true"/>
+       </property>
+       <property name="text">
+         <string>Select</string>
+       </property>
+     </widget>
+   </item>
+   <item row="3" column="0">
+     <widget class="QLabel" name="label">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>8</pointsize>
+         </font>
+       </property>
+       <property name="text">
+         <string>Waypoint:</string>
+       </property>
+     </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="add_points">
+        <property name="text">
+          <string>Add</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="remove_point">
+        <property name="text">
+         <string>Remove</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="0">
+     <widget class="QLabel" name="label">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>8</pointsize>
+         </font>
+       </property>
+       <property name="text">
+         <string>Mission:</string>
+       </property>
+     </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+        <widget class="QPushButton" name="send_goal">
+          <property name="text">
+            <string>Send</string>
+          </property>
+        </widget>
+      </item>
+      <item>
+        <widget class="QPushButton" name="cancel">
+          <property name="text">
+            <string>Cancel</string>
+          </property>
+        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Color:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+     <widget class="mapviz::ColorButton" name="path_color">
+       <property name="maximumSize">
+         <size>
+           <width>24</width>
+           <height>24</height>
+         </size>
+       </property>
+       <property name="text">
+         <string/>
+       </property>
+     </widget>
+   </item>
    <item row="6" column="0">
+     <widget class="QLabel" name="label_9">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>8</pointsize>
+         </font>
+       </property>
+       <property name="text">
+         <string>Alpha:</string>
+       </property>
+     </widget>
+   </item>
+   <item row="6" column="1">
+     <widget class="QDoubleSpinBox" name="alpha">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>8</pointsize>
+         </font>
+       </property>
+       <property name="maximumSize">
+         <size>
+           <width>48</width>
+           <height>16777215</height>
+         </size>
+       </property>
+       <property name="buttonSymbols">
+         <enum>QAbstractSpinBox::PlusMinus</enum>
+       </property>
+       <property name="minimum">
+         <double>0.0</double>
+       </property>
+       <property name="maximum">
+         <double>1.0</double>
+       </property>
+       <property name="value">
+         <double>0.5</double>
+       </property>
+       <property name="singleStep">
+         <double>0.1</double>
+       </property>
+     </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Info:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Press Add to add a new point:
+      a. Click a current waypoint
+          - Right Click generates the following point
+          - Left Click generates the previous point
+
+      b. Click a free map position to generate a new
+      point at the end of the path
+      </string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
     <widget class="QLabel" name="label_2">
      <property name="font">
       <font>
@@ -36,19 +252,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Color:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="2" colspan="2">
+   <item row="8" column="2" colspan="2">
     <widget class="QLabel" name="status">
      <property name="font">
       <font>
@@ -64,121 +268,6 @@
      </property>
      <property name="wordWrap">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="selecttopic">
-     <property name="maximumSize">
-      <size>
-       <width>55</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <property name="text">
-      <string>Select</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLineEdit" name="topic">
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Topic:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="mapviz::ColorButton" name="path_color">
-     <property name="maximumSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="4" column="1">
-    <widget class="QDoubleSpinBox" name="alpha">
-      <property name="font">
-        <font>
-          <family>Sans Serif</family>
-          <pointsize>8</pointsize>
-        </font>
-      </property>
-      <property name="maximumSize">
-        <size>
-          <width>48</width>
-          <height>16777215</height>
-        </size>
-      </property>
-      <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-      </property>
-      <property name="minimum">
-        <double>0.0</double>
-      </property>
-      <property name="maximum">
-        <double>1.0</double>
-      </property>
-      <property name="value">
-        <double>0.5</double>
-      </property>
-      <property name="singleStep">
-        <double>0.1</double>
-      </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_9">
-      <property name="font">
-       <font>
-        <family>Sans Serif</family>
-        <pointsize>8</pointsize>
-       </font>
-      </property>
-     <property name="text">
-      <string>Alpha:</string>
      </property>
     </widget>
    </item>

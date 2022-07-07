@@ -272,6 +272,22 @@
           </property>
          </widget>
         </item>
+        <!-- <item row="3" column="4" colspan="3">
+         <widget class="QCheckBox" name="editplugins">
+          <property name="toolTip">
+           <string>Allow editing plugins</string>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="text">
+           <string>Edit Plugins</string>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item> -->
        </layout>
       </widget>
      </item>
@@ -515,6 +531,7 @@
   <tabstop>fixedframe</tabstop>
   <tabstop>targetframe</tabstop>
   <tabstop>uselatesttransforms</tabstop>
+  <tabstop>editplugins</tabstop>
   <tabstop>bg_color</tabstop>
   <tabstop>configs</tabstop>
   <tabstop>addbutton</tabstop>
@@ -705,6 +722,22 @@
    <signal>toggled(bool)</signal>
    <receiver>mapviz</receiver>
    <slot>ToggleUseLatestTransforms(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>58</x>
+     <y>130</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>460</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editplugins</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>mapviz</receiver>
+   <slot>ToggleEditPlugins(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>58</x>
