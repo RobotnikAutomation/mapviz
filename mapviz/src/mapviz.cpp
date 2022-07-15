@@ -280,6 +280,8 @@ void Mapviz::Initialize()
     ros::NodeHandle priv("~");
 
     add_display_srv_ = node_->advertiseService("add_mapviz_display", &Mapviz::AddDisplay, this);
+    joy_sub = node_->subscribe("/robot/input/joy", 1, &Mapviz::joyCallback, this);
+    joy_pub = node_->advertise<sensor_msgs::Joy>("/robot/joy", 1, true);
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     QString default_path = QDir::homePath();
@@ -334,6 +336,11 @@ void Mapviz::Initialize()
 
     initialized_ = true;
   }
+}
+
+void Mapviz::joyCallback(const sensor_msgs::Joy& msg)
+{
+  joy_pub.publish(msg);
 }
 
 void Mapviz::SpinOnce()
