@@ -106,6 +106,7 @@ set(UI_FILES
     ui/robot_image_config.ui
     ui/robot_status_config.ui
     ui/route_config.ui
+    ui/scan_area_config.ui
     ui/send_gps_goal_config.ui
     ui/string_config.ui
     ui/swarm_event_config.ui
@@ -146,6 +147,7 @@ set(SRC_FILES
     src/robot_image_plugin.cpp
     src/robot_status_plugin.cpp
     src/route_plugin.cpp
+    src/scan_area_plugin.cpp
     src/send_gps_goal_plugin.cpp
     src/string_plugin.cpp
     src/swarm_event_plugin.cpp
@@ -186,6 +188,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/robot_image_plugin.h
     include/${PROJECT_NAME}/robot_status_plugin.h
     include/${PROJECT_NAME}/route_plugin.h
+    include/${PROJECT_NAME}/scan_area_plugin.h
     include/${PROJECT_NAME}/send_gps_goal_plugin.h
     include/${PROJECT_NAME}/string_plugin.h
     include/${PROJECT_NAME}/swarm_event_plugin.h
