@@ -76,7 +76,8 @@ namespace tile_map
     last_center_y_(0.0),
     last_scale_(0.0),
     last_height_(0),
-    last_width_(0)
+    last_width_(0),
+    offset_x_(0)
   {
     ui_.setupUi(config_widget_);
 
@@ -116,6 +117,7 @@ namespace tile_map
     QObject::connect(ui_.source_combo, SIGNAL(activated(const QString&)), this, SLOT(SelectSource(const QString&)));
     QObject::connect(ui_.save_button, SIGNAL(clicked()), this, SLOT(SaveCustomSource()));
     QObject::connect(ui_.reset_cache_button, SIGNAL(clicked()), this, SLOT(ResetTileCache()));
+    QObject::connect(ui_.vertical_offset, SIGNAL(valueChanged(int)), this, SLOT(MapVerticalOffset(int)));
   }
 
   TileMapPlugin::~TileMapPlugin()
@@ -238,6 +240,11 @@ namespace tile_map
     }
   }
 
+  void TileMapPlugin::MapVerticalOffset(const int& value)
+  {
+    offset_x_ = value;
+  }
+
   void TileMapPlugin::ResetTileCache()
   {
     tile_map_.ResetCache();
@@ -307,6 +314,7 @@ namespace tile_map
     {
       tf::Vector3 center(x, y, 0);
       center = to_wgs84 * center;
+      center.setX(center.x() + offset_x_/1000);
 
       if (center.y() != last_center_y_ ||
           center.x() != last_center_x_ ||
@@ -389,7 +397,7 @@ namespace tile_map
       BingSource* source = static_cast<BingSource*>(tile_sources_[BING_NAME].get());
       source->SetApiKey(QString::fromStdString(key));
     }
-    
+
     if (swri_yaml_util::FindValue(node, SOURCE_KEY))
     {
       std::string source;
@@ -401,7 +409,7 @@ namespace tile_map
       {
         ui_.source_combo->setCurrentIndex(index);
       }
-      
+
       SelectSource(QString::fromStdString(source));
     }
   }
@@ -465,4 +473,3 @@ namespace tile_map
     ui_.save_button->setEnabled(false);
   }
 }
-
