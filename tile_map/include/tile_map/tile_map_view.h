@@ -78,7 +78,7 @@ namespace tile_map
       int32_t width,
       int32_t height);
 
-    void Draw();
+    void Draw(const float& offset_x, const float& offset_y);
 
   private:
     void DrawTiles(std::vector<Tile> &tiles ,int priority);
@@ -96,6 +96,9 @@ namespace tile_map
 
     int32_t width_;
     int32_t height_;
+
+    float h_offset_;
+    float v_offset_;
 
     std::vector<Tile> tiles_;
     std::vector<Tile> precache_;
