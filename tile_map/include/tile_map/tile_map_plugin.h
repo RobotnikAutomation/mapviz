@@ -84,6 +84,7 @@ namespace tile_map
     void DeleteTileSource();
     void SelectSource(const QString& source_name);
     void SaveCustomSource();
+    void MapHorizontalOffset(const int& value);
     void MapVerticalOffset(const int& value);
     void ResetTileCache();
 
@@ -108,7 +109,7 @@ namespace tile_map
     double last_scale_;
     int32_t last_height_;
     int32_t last_width_;
-    float offset_x_;
+    float offset_x_, offset_y_;
 
     static std::string BASE_URL_KEY;
     static std::string BING_API_KEY;

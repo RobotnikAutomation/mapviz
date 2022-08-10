@@ -118,6 +118,7 @@ namespace tile_map
     QObject::connect(ui_.save_button, SIGNAL(clicked()), this, SLOT(SaveCustomSource()));
     QObject::connect(ui_.reset_cache_button, SIGNAL(clicked()), this, SLOT(ResetTileCache()));
     QObject::connect(ui_.vertical_offset, SIGNAL(valueChanged(int)), this, SLOT(MapVerticalOffset(int)));
+    QObject::connect(ui_.horizontal_offset, SIGNAL(valueChanged(int)), this, SLOT(MapHorizontalOffset(int)));
   }
 
   TileMapPlugin::~TileMapPlugin()
@@ -240,10 +241,16 @@ namespace tile_map
     }
   }
 
+  void TileMapPlugin::MapHorizontalOffset(const int& value)
+  {
+    offset_x_ = -value;
+  }
+
   void TileMapPlugin::MapVerticalOffset(const int& value)
   {
-    offset_x_ = value;
+    offset_y_ = -value;
   }
+
 
   void TileMapPlugin::ResetTileCache()
   {
@@ -314,7 +321,6 @@ namespace tile_map
     {
       tf::Vector3 center(x, y, 0);
       center = to_wgs84 * center;
-      center.setX(center.x() + offset_x_/1000);
 
       if (center.y() != last_center_y_ ||
           center.x() != last_center_x_ ||
@@ -332,7 +338,7 @@ namespace tile_map
         tile_map_.SetView(center.y(), center.x(), scale, canvas_->width(), canvas_->height());
         ROS_DEBUG("TileMapPlugin::Draw: Successfully set view");
       }
-      tile_map_.Draw();
+      tile_map_.Draw(offset_x_/10, offset_y_/10);
     }
   }
 
