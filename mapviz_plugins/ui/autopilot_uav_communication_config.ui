@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>autopilot_uav_communication_config</class>
+ <widget class="QWidget" name="autopilot_uav_communication_config">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>79</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
+    <property name="verticalSpacing">
+     <number>4</number>
+    </property>
+   <item row="0" column="0">
+     <widget class="QLabel" name="TakeOffRequest">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>15</pointsize>
+           <bold>true</bold>
+         </font>
+       </property>
+       <property name="text">
+         <string>TAKE OFF REQUEST</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignVCenter | Qt::AlignHCenter</set>
+       </property>
+     </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QPushButton" name="TakeOffGrantbutton">
+     <property name="maximumSize">
+      <size>
+       <width>190</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Accept</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+     <widget class="QLabel" name="LandRequest">
+       <property name="font">
+         <font>
+           <family>Sans Serif</family>
+           <pointsize>15</pointsize>
+           <bold>true</bold>
+         </font>
+       </property>
+       <property name="text">
+         <string>LAND REQUEST</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignVCenter | Qt::AlignHCenter</set>
+       </property>
+     </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="LandGrantbutton">
+     <property name="maximumSize">
+      <size>
+       <width>190</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Sans Serif</family>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string>Accept</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+ <slots>
+  <slot>Accept()</slot>
+ </slots>
+</ui>
