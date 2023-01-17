@@ -10,6 +10,9 @@
   <class name="mapviz_plugins/autopilot_auto_manual_button" type="mapviz_plugins::AutopilotAutoManualButtonPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Specifies manual or automatic mode.</description>
   </class>
+  <class name="mapviz_plugins/autopilot_mission_config" type="mapviz_plugins::AutopilotMissionPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Accept Mission Plan and Swarm Event.</description>
+  </class>
   <class name="mapviz_plugins/autopilot_uav_communication_config" type="mapviz_plugins::AutopilotUAVCommunicationPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Gets the UAV communication.</description>
   </class>
