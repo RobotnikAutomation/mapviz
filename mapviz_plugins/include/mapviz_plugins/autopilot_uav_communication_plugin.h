@@ -6,6 +6,8 @@
 // ROS libraries
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Int64.h>
+#include <std_msgs/String.h>
 
 // Mapviz libraries
 #include <mapviz/map_canvas.h>
@@ -46,10 +48,15 @@ namespace mapviz_plugins
     }
 
     protected Q_SLOTS:
+    void uavStatusCB(const std_msgs::String &msg);
     void takeOffRequestCB(const std_msgs::Empty &msg);
     void landRequestCB(const std_msgs::Empty &msg);
-    void AcceptTakeOff();
-    void AcceptLanding();
+    void closeGripperRequestCB(const std_msgs::Empty &msg);
+    void UAVOpenGripperCB();
+    void UAVCloseGripperCB();
+    void ContinueButtonCB();
+    void OpenValueChanged(const int value);
+    void CloseValueChanged(const int value);
     void flashingTakeOffRequest(const ros::TimerEvent& event);
     void flashingLandRequest(const ros::TimerEvent& event);
 
@@ -61,10 +68,12 @@ namespace mapviz_plugins
 
     ros::Timer land_request_timer_, take_off_request_timer_;
 
-    ros::Subscriber uav_land_request_sub_, uav_take_off_request_sub_;
-    ros::Publisher uav_land_granted_pub_, uav_take_off_granted_pub_, pause_navigation_pub_;
+    ros::Subscriber uav_land_request_sub_, uav_take_off_request_sub_, uav_status_sub_, close_gripper_request_sub_;
+    ros::Publisher uav_land_granted_pub_, uav_take_off_granted_pub_;
+    ros::Publisher move_uav_gripper_pub_, gripper_closed_pub_; //open_uav_gripper_pub_, close_uav_gripper_pub_;
 
-    bool take_off_flashing_ = false, land_flashing_ = false, land_req_received_ = false;
+    bool take_off_flashing_ = false, land_flashing_ = false, take_off_req_received_ = false, land_req_received_ = false, close_gripper_req_received_ = false;
+    int open_value_ = 7700, close_value_ = 2250;
     };
 
     }
