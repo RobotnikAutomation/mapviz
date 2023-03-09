@@ -91,6 +91,9 @@
   <class name="mapviz_plugins/point_click_publisher" type="mapviz_plugins::PointClickPublisherPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Publishes a StampedPoint when a point on the map canvas is clicked.</description>
   </class>
+  <class name="mapviz_plugins/scan_area" type="mapviz_plugins::ScanAreaPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Publish a polygon to be explored by the robot</description>
+  </class>
   <class name="mapviz_plugins/send_gps_goal" type="mapviz_plugins::SendGPSGoalPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Publish a GPS goal by clicking on the map</description>
   </class>

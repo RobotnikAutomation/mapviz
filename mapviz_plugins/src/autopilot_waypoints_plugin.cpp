@@ -74,8 +74,8 @@ namespace mapviz_plugins
 
     // goal_sub_ = node_.subscribe("autopilot_gps_goal_navigator/gps_goal", 1, &AutopilotWaypointsPlugin::goalCallback, this);
 
-    accept_mission_pub_ = node_.advertise<std_msgs::Empty>("accept_goal", 1, true);
-    cancel_pub_ = node_.advertise<std_msgs::Empty>("cancel", 1, true);
+    accept_mission_pub_ = node_.advertise<std_msgs::Empty>("waypoints/accept_goal", 1, true);
+    cancel_pub_ = node_.advertise<std_msgs::Empty>("waypoints/cancel", 1, true);
   }
 
   AutopilotWaypointsPlugin::~AutopilotWaypointsPlugin()
@@ -509,7 +509,6 @@ namespace mapviz_plugins
   void AutopilotWaypointsPlugin::Cancel()
   {
     std_msgs::Empty msg;
-    vertices_.clear();
     cancel_pub_.publish(msg);
     map_canvas_->installEventFilter(this);
     return;
