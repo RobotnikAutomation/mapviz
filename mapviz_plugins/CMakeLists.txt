@@ -81,6 +81,8 @@ set(UI_FILES
     ui/attitude_indicator_config.ui
     ui/autopilot_waypoints_config.ui
     ui/autopilot_emergency_button_config.ui
+    ui/autopilot_uav_communication_config.ui
+    ui/autopilot_mission_config.ui
     ui/autopilot_auto_manual_button_config.ui
     ui/coordinate_picker_config.ui
     ui/disparity_config.ui
@@ -119,6 +121,8 @@ set(SRC_FILES
     src/autopilot_waypoints_plugin.cpp
     src/autopilot_emergency_button_plugin.cpp
     src/autopilot_auto_manual_button_plugin.cpp
+    src/autopilot_mission_plugin.cpp
+    src/autopilot_uav_communication_plugin.cpp
     src/canvas_click_filter.cpp
     src/coordinate_picker_plugin.cpp
     src/disparity_plugin.cpp
@@ -158,6 +162,8 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/autopilot_waypoints_plugin.h
     include/${PROJECT_NAME}/autopilot_emergency_button_plugin.h
     include/${PROJECT_NAME}/autopilot_auto_manual_button_plugin.h
+    include/${PROJECT_NAME}/autopilot_mission_plugin.h
+    include/${PROJECT_NAME}/autopilot_uav_communication_plugin.h
     include/${PROJECT_NAME}/canvas_click_filter.h
     include/${PROJECT_NAME}/coordinate_picker_plugin.h
     include/${PROJECT_NAME}/disparity_plugin.h
