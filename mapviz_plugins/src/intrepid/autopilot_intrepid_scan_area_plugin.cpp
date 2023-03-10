@@ -27,7 +27,7 @@
 //
 // *****************************************************************************
 
-#include <mapviz_plugins/scan_area_plugin.h>
+#include <mapviz_plugins/intrepid/autopilot_intrepid_scan_area_plugin.h>
 
 // C++ standard libraries
 #include <cstdio>
@@ -52,13 +52,13 @@
 
 // Declare plugin
 #include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(mapviz_plugins::ScanAreaPlugin, mapviz::MapvizPlugin)
+PLUGINLIB_EXPORT_CLASS(mapviz_plugins::AutopilotIntrepidScanAreaPlugin, mapviz::MapvizPlugin)
 
 namespace stu = swri_transform_util;
 
 namespace mapviz_plugins
 {
-  ScanAreaPlugin::ScanAreaPlugin() :
+  AutopilotIntrepidScanAreaPlugin::AutopilotIntrepidScanAreaPlugin() :
     config_widget_(new QWidget()),
     map_canvas_(NULL),
     selected_point_(-1),
@@ -88,7 +88,7 @@ namespace mapviz_plugins
     cancel_pub_ = node_.advertise<std_msgs::Empty>("scan_area/cancel", 1, true);
   }
 
-  ScanAreaPlugin::~ScanAreaPlugin()
+  AutopilotIntrepidScanAreaPlugin::~AutopilotIntrepidScanAreaPlugin()
   {
     if (map_canvas_)
     {
@@ -96,7 +96,7 @@ namespace mapviz_plugins
     }
   }
 
-  void ScanAreaPlugin::SelectTopic()
+  void AutopilotIntrepidScanAreaPlugin::SelectTopic()
   {
     ros::master::TopicInfo topic =
         mapviz::SelectTopicDialog::selectTopic("geometry_msgs/PolygonStamped");
@@ -108,7 +108,7 @@ namespace mapviz_plugins
     }
   }
 
-  void ScanAreaPlugin::TopicEdited()
+  void AutopilotIntrepidScanAreaPlugin::TopicEdited()
   {
     std::string topic = ui_.topic->text().trimmed().toStdString();
     if (topic != topic_)
@@ -123,21 +123,21 @@ namespace mapviz_plugins
       topic_ = topic;
       if (!topic.empty())
       {
-        polygon_sub_ = node_.subscribe(topic_, 1, &ScanAreaPlugin::polygonCallback, this);
+        polygon_sub_ = node_.subscribe(topic_, 1, &AutopilotIntrepidScanAreaPlugin::polygonCallback, this);
 
         ROS_INFO("Subscribing to %s", topic_.c_str());
       }
     }
   }
 
-  void ScanAreaPlugin::Cancel()
+  void AutopilotIntrepidScanAreaPlugin::Cancel()
   {
     std_msgs::Empty msg;
     cancel_pub_.publish(msg);
     return;
   }
 
-  void ScanAreaPlugin::SendGoal()
+  void AutopilotIntrepidScanAreaPlugin::SendGoal()
   {
     if(vertices_.size() > 0)
     {
@@ -147,7 +147,7 @@ namespace mapviz_plugins
     return;
   }
 
-  void ScanAreaPlugin::polygonCallback(const geometry_msgs::PolygonStampedConstPtr& polygon)
+  void AutopilotIntrepidScanAreaPlugin::polygonCallback(const geometry_msgs::PolygonStampedConstPtr& polygon)
   {
     if (!tf_manager_->LocalXyUtil()->Initialized())
     {
@@ -172,35 +172,35 @@ namespace mapviz_plugins
     return;
   }
 
-  void ScanAreaPlugin::Clear()
+  void AutopilotIntrepidScanAreaPlugin::Clear()
   {
     vertices_.clear();
     transformed_vertices_.clear();
   }
 
-  void ScanAreaPlugin::PrintError(const std::string& message)
+  void AutopilotIntrepidScanAreaPlugin::PrintError(const std::string& message)
   {
     PrintErrorHelper(ui_.status, message, 1.0);
   }
 
-  void ScanAreaPlugin::PrintInfo(const std::string& message)
+  void AutopilotIntrepidScanAreaPlugin::PrintInfo(const std::string& message)
   {
     PrintInfoHelper(ui_.status, message, 1.0);
   }
 
-  void ScanAreaPlugin::PrintWarning(const std::string& message)
+  void AutopilotIntrepidScanAreaPlugin::PrintWarning(const std::string& message)
   {
     PrintWarningHelper(ui_.status, message, 1.0);
   }
 
-  QWidget* ScanAreaPlugin::GetConfigWidget(QWidget* parent)
+  QWidget* AutopilotIntrepidScanAreaPlugin::GetConfigWidget(QWidget* parent)
   {
     config_widget_->setParent(parent);
 
     return config_widget_;
   }
 
-  bool ScanAreaPlugin::Initialize(QGLWidget* canvas)
+  bool AutopilotIntrepidScanAreaPlugin::Initialize(QGLWidget* canvas)
   {
     map_canvas_ = static_cast<mapviz::MapCanvas*>(canvas);
     map_canvas_->installEventFilter(this);
@@ -209,7 +209,7 @@ namespace mapviz_plugins
     return true;
   }
 
-  bool ScanAreaPlugin::eventFilter(QObject *object, QEvent* event)
+  bool AutopilotIntrepidScanAreaPlugin::eventFilter(QObject *object, QEvent* event)
   {
     switch (event->type())
     {
@@ -224,7 +224,7 @@ namespace mapviz_plugins
     }
   }
 
-  bool ScanAreaPlugin::handleMousePress(QMouseEvent* event)
+  bool AutopilotIntrepidScanAreaPlugin::handleMousePress(QMouseEvent* event)
   {
     if(!this->Visible())
     {
@@ -294,7 +294,7 @@ namespace mapviz_plugins
     return false;
   }
 
-  bool ScanAreaPlugin::handleMouseRelease(QMouseEvent* event)
+  bool AutopilotIntrepidScanAreaPlugin::handleMouseRelease(QMouseEvent* event)
   {
     std::string frame = "robot_odom";
     if (selected_point_ >= 0 && static_cast<size_t>(selected_point_) < vertices_.size())
@@ -358,7 +358,7 @@ namespace mapviz_plugins
     return false;
   }
 
-  bool ScanAreaPlugin::handleMouseMove(QMouseEvent* event)
+  bool AutopilotIntrepidScanAreaPlugin::handleMouseMove(QMouseEvent* event)
   {
     if (selected_point_ >= 0 && static_cast<size_t>(selected_point_) < vertices_.size())
     {
@@ -383,7 +383,7 @@ namespace mapviz_plugins
     return false;
   }
 
-  void ScanAreaPlugin::Draw(double x, double y, double scale)
+  void AutopilotIntrepidScanAreaPlugin::Draw(double x, double y, double scale)
   {
     glLineWidth(7);
     const QColor color = ui_.color->color();
@@ -422,7 +422,7 @@ namespace mapviz_plugins
     PrintInfo("OK");
   }
 
-  void ScanAreaPlugin::LoadConfig(const YAML::Node& node, const std::string& path)
+  void AutopilotIntrepidScanAreaPlugin::LoadConfig(const YAML::Node& node, const std::string& path)
   {
     if (node["polygon_topic"])
     {
@@ -438,7 +438,7 @@ namespace mapviz_plugins
     }
   }
 
-  void ScanAreaPlugin::SaveConfig(YAML::Emitter& emitter, const std::string& path)
+  void AutopilotIntrepidScanAreaPlugin::SaveConfig(YAML::Emitter& emitter, const std::string& path)
   {
     std::string polygon_topic = ui_.topic->text().toStdString();
     emitter << YAML::Key << "polygon_topic" << YAML::Value << polygon_topic;

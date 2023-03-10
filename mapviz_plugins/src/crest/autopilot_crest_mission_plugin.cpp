@@ -1,4 +1,4 @@
-#include <mapviz_plugins/autopilot_mission_plugin.h>
+#include <mapviz_plugins/crest/autopilot_crest_mission_plugin.h>
 #include <mapviz/mapviz_plugin.h>
 
 #if QT_VERSION >= 0x050000
@@ -13,11 +13,11 @@
 // Declare plugin
 #include <pluginlib/class_list_macros.h>
 
-PLUGINLIB_EXPORT_CLASS(mapviz_plugins::AutopilotMissionPlugin, mapviz::MapvizPlugin)
+PLUGINLIB_EXPORT_CLASS(mapviz_plugins::AutopilotCrestMissionPlugin, mapviz::MapvizPlugin)
 
 namespace mapviz_plugins
 {
-  AutopilotMissionPlugin::AutopilotMissionPlugin():
+  AutopilotCrestMissionPlugin::AutopilotCrestMissionPlugin():
     config_widget_(new QWidget())
     {
     ui_.setupUi(config_widget_);
@@ -29,25 +29,25 @@ namespace mapviz_plugins
 
     QObject::connect(ui_.MissionPlanAcceptbutton, SIGNAL(clicked()), this, SLOT(AcceptMissionPlan()));
     QObject::connect(ui_.SwarmEventAcceptbutton, SIGNAL(clicked()), this, SLOT(AcceptSwarmEvent()));
-    
+
     ui_.MissionPlanAcceptbutton->setEnabled(false);
     ui_.SwarmEventAcceptbutton->setEnabled(false);
 
-    mission_plan_debug_sub_ = node_.subscribe("/mission_plan_debug", 1, &AutopilotMissionPlugin::MissionPlanCB, this);
-    swarm_event_debug_sub_ = node_.subscribe("/swarm_event_debug", 1, &AutopilotMissionPlugin::SwarmEventCB, this);
+    mission_plan_debug_sub_ = node_.subscribe("/mission_plan_debug", 1, &AutopilotCrestMissionPlugin::MissionPlanCB, this);
+    swarm_event_debug_sub_ = node_.subscribe("/swarm_event_debug", 1, &AutopilotCrestMissionPlugin::SwarmEventCB, this);
 
     confirm_mission_plan_ = node_.serviceClient<std_srvs::SetBool>("/confirm_mission_plan");
     confirm_swarm_event_ = node_.serviceClient<std_srvs::SetBool>("/confirm_swarm_event");
   }
 
-  QWidget* AutopilotMissionPlugin::GetConfigWidget(QWidget* parent)
+  QWidget* AutopilotCrestMissionPlugin::GetConfigWidget(QWidget* parent)
   {
     config_widget_->setParent(parent);
 
     return config_widget_;
   }
 
-  bool AutopilotMissionPlugin::Initialize(QGLWidget* canvas)
+  bool AutopilotCrestMissionPlugin::Initialize(QGLWidget* canvas)
   {
     map_canvas_ = static_cast< mapviz::MapCanvas* >(canvas);
     map_canvas_->installEventFilter(this);
@@ -57,23 +57,23 @@ namespace mapviz_plugins
     return true;
   }
 
-  AutopilotMissionPlugin::~AutopilotMissionPlugin()
+  AutopilotCrestMissionPlugin::~AutopilotCrestMissionPlugin()
   {
   }
 
-  void AutopilotMissionPlugin::MissionPlanCB(const nav_msgs::Path &msg)
+  void AutopilotCrestMissionPlugin::MissionPlanCB(const nav_msgs::Path &msg)
   {
     ui_.MissionPlanAcceptbutton->setEnabled(true);
-    mission_plan_timer_ = node_.createTimer(ros::Duration(1), &AutopilotMissionPlugin::flashingMissionPlan, this);
+    mission_plan_timer_ = node_.createTimer(ros::Duration(1), &AutopilotCrestMissionPlugin::flashingMissionPlan, this);
   }
 
-  void AutopilotMissionPlugin::SwarmEventCB(const nav_msgs::Path &msg)
+  void AutopilotCrestMissionPlugin::SwarmEventCB(const nav_msgs::Path &msg)
   {
     ui_.SwarmEventAcceptbutton->setEnabled(true);
-    swarm_event_timer_ = node_.createTimer(ros::Duration(1), &AutopilotMissionPlugin::flashingSwarmEvent, this);
+    swarm_event_timer_ = node_.createTimer(ros::Duration(1), &AutopilotCrestMissionPlugin::flashingSwarmEvent, this);
   }
 
-  void AutopilotMissionPlugin::AcceptMissionPlan()
+  void AutopilotCrestMissionPlugin::AcceptMissionPlan()
   {
     QPalette p_text;
 
@@ -93,7 +93,7 @@ namespace mapviz_plugins
     ui_.MissionPlanAcceptbutton->setEnabled(false);
   }
 
-  void AutopilotMissionPlugin::AcceptSwarmEvent()
+  void AutopilotCrestMissionPlugin::AcceptSwarmEvent()
   {
     QPalette p_text;
 
@@ -113,7 +113,7 @@ namespace mapviz_plugins
     ui_.SwarmEventAcceptbutton->setEnabled(false);
   }
 
-  void AutopilotMissionPlugin::flashingMissionPlan(const ros::TimerEvent& event)
+  void AutopilotCrestMissionPlugin::flashingMissionPlan(const ros::TimerEvent& event)
   {
       QPalette p_text;
 
@@ -137,7 +137,7 @@ namespace mapviz_plugins
       }
   }
 
-  void AutopilotMissionPlugin::flashingSwarmEvent(const ros::TimerEvent& event)
+  void AutopilotCrestMissionPlugin::flashingSwarmEvent(const ros::TimerEvent& event)
   {
       QPalette p_text;
 
@@ -161,26 +161,26 @@ namespace mapviz_plugins
       }
   }
 
-  void AutopilotMissionPlugin::PrintError(const std::string& message)
+  void AutopilotCrestMissionPlugin::PrintError(const std::string& message)
   {
   }
 
-  void AutopilotMissionPlugin::PrintInfo(const std::string& message)
+  void AutopilotCrestMissionPlugin::PrintInfo(const std::string& message)
   {
   }
 
-  void AutopilotMissionPlugin::PrintWarning(const std::string& message)
+  void AutopilotCrestMissionPlugin::PrintWarning(const std::string& message)
   {
   }
 
-  void AutopilotMissionPlugin::Draw(double x, double y, double scale)
+  void AutopilotCrestMissionPlugin::Draw(double x, double y, double scale)
   {
   }
 
-  void AutopilotMissionPlugin::LoadConfig(const YAML::Node& node, const std::string& path)
+  void AutopilotCrestMissionPlugin::LoadConfig(const YAML::Node& node, const std::string& path)
   {
   }
-  void AutopilotMissionPlugin::SaveConfig(YAML::Emitter& emitter, const std::string& path)
+  void AutopilotCrestMissionPlugin::SaveConfig(YAML::Emitter& emitter, const std::string& path)
   {
   }
 

@@ -81,9 +81,11 @@ set(UI_FILES
     ui/attitude_indicator_config.ui
     ui/autopilot_waypoints_config.ui
     ui/autopilot_emergency_button_config.ui
-    ui/autopilot_uav_communication_config.ui
-    ui/autopilot_mission_config.ui
     ui/autopilot_auto_manual_button_config.ui
+    ui/crest/autopilot_uav_communication_config.ui
+    ui/crest/autopilot_crest_mission_config.ui
+    ui/intrepid/autopilot_intrepid_scan_area_config.ui
+    ui/intrepid/autopilot_intrepid_mission_config.ui
     ui/coordinate_picker_config.ui
     ui/disparity_config.ui
     ui/draw_polygon_config.ui
@@ -108,7 +110,6 @@ set(UI_FILES
     ui/robot_image_config.ui
     ui/robot_status_config.ui
     ui/route_config.ui
-    ui/scan_area_config.ui
     ui/send_gps_goal_config.ui
     ui/string_config.ui
     ui/swarm_event_config.ui
@@ -122,8 +123,10 @@ set(SRC_FILES
     src/autopilot_waypoints_plugin.cpp
     src/autopilot_emergency_button_plugin.cpp
     src/autopilot_auto_manual_button_plugin.cpp
-    src/autopilot_mission_plugin.cpp
-    src/autopilot_uav_communication_plugin.cpp
+    src/crest/autopilot_crest_mission_plugin.cpp
+    src/crest/autopilot_uav_communication_plugin.cpp
+    src/intrepid/autopilot_intrepid_scan_area_plugin.cpp
+    src/intrepid/autopilot_intrepid_mission_plugin.cpp
     src/canvas_click_filter.cpp
     src/coordinate_picker_plugin.cpp
     src/disparity_plugin.cpp
@@ -151,7 +154,6 @@ set(SRC_FILES
     src/robot_image_plugin.cpp
     src/robot_status_plugin.cpp
     src/route_plugin.cpp
-    src/scan_area_plugin.cpp
     src/send_gps_goal_plugin.cpp
     src/string_plugin.cpp
     src/swarm_event_plugin.cpp
@@ -164,8 +166,10 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/autopilot_waypoints_plugin.h
     include/${PROJECT_NAME}/autopilot_emergency_button_plugin.h
     include/${PROJECT_NAME}/autopilot_auto_manual_button_plugin.h
-    include/${PROJECT_NAME}/autopilot_mission_plugin.h
-    include/${PROJECT_NAME}/autopilot_uav_communication_plugin.h
+    include/${PROJECT_NAME}/crest/autopilot_crest_mission_plugin.h
+    include/${PROJECT_NAME}/crest/autopilot_uav_communication_plugin.h
+    include/${PROJECT_NAME}/intrepid/autopilot_intrepid_scan_area_plugin.h
+    include/${PROJECT_NAME}/intrepid/autopilot_intrepid_mission_plugin.h
     include/${PROJECT_NAME}/canvas_click_filter.h
     include/${PROJECT_NAME}/coordinate_picker_plugin.h
     include/${PROJECT_NAME}/disparity_plugin.h
@@ -194,7 +198,6 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/robot_image_plugin.h
     include/${PROJECT_NAME}/robot_status_plugin.h
     include/${PROJECT_NAME}/route_plugin.h
-    include/${PROJECT_NAME}/scan_area_plugin.h
     include/${PROJECT_NAME}/send_gps_goal_plugin.h
     include/${PROJECT_NAME}/string_plugin.h
     include/${PROJECT_NAME}/swarm_event_plugin.h

@@ -27,8 +27,8 @@
 //
 // *****************************************************************************
 
-#ifndef MAPVIZ_PLUGINS_SCAN_AREA_PLUGIN_H_
-#define MAPVIZ_PLUGINS_SCAN_AREA_PLUGIN_H_
+#ifndef MAPVIZ_PLUGINS_AUTOPILOT_INTREPID_SCAN_AREA_PLUGIN_H_
+#define MAPVIZ_PLUGINS_AUTOPILOT_INTREPID_SCAN_AREA_PLUGIN_H_
 
 // C++ standard libraries
 #include <string>
@@ -56,14 +56,14 @@
 
 namespace mapviz_plugins
 {
-  class ScanAreaPlugin : public mapviz::MapvizPlugin
+  class AutopilotIntrepidScanAreaPlugin : public mapviz::MapvizPlugin
   {
     Q_OBJECT
 
    public:
 
-    ScanAreaPlugin();
-    virtual ~ScanAreaPlugin();
+    AutopilotIntrepidScanAreaPlugin();
+    virtual ~AutopilotIntrepidScanAreaPlugin();
 
     bool Initialize(QGLWidget* canvas);
     void Shutdown()
@@ -105,7 +105,7 @@ namespace mapviz_plugins
     ros::Subscriber polygon_sub_;
     ros::Publisher accept_mission_pub_;
     ros::Publisher cancel_pub_;
-    
+
     std::vector<tf::Vector3> vertices_;
     std::vector<tf::Vector3> transformed_vertices_;
 
@@ -121,4 +121,4 @@ namespace mapviz_plugins
   };
 }
 
-#endif  // MAPVIZ_PLUGINS_SCAN_AREA_PLUGIN_H_
+#endif  // MAPVIZ_PLUGINS_AUTOPILOT_INTREPID_SCAN_AREA_PLUGIN_H_

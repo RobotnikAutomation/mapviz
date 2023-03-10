@@ -1,4 +1,4 @@
-#include <mapviz_plugins/autopilot_uav_communication_plugin.h>
+#include <mapviz_plugins/crest/autopilot_uav_communication_plugin.h>
 #include <mapviz/mapviz_plugin.h>
 
 #if QT_VERSION >= 0x050000

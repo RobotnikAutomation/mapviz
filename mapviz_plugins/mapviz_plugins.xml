@@ -10,11 +10,17 @@
   <class name="mapviz_plugins/autopilot_auto_manual_button" type="mapviz_plugins::AutopilotAutoManualButtonPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Specifies manual or automatic mode.</description>
   </class>
-  <class name="mapviz_plugins/autopilot_mission_config" type="mapviz_plugins::AutopilotMissionPlugin" base_class_type="mapviz::MapvizPlugin">
-    <description>Accept Mission Plan and Swarm Event.</description>
+  <class name="mapviz_plugins/crest/autopilot_crest_mission_config" type="mapviz_plugins::AutopilotCrestMissionPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Accept CREST Mission Plan and Swarm Event.</description>
   </class>
-  <class name="mapviz_plugins/autopilot_uav_communication_config" type="mapviz_plugins::AutopilotUAVCommunicationPlugin" base_class_type="mapviz::MapvizPlugin">
+  <class name="mapviz_plugins/crest/autopilot_uav_communication_config" type="mapviz_plugins::AutopilotUAVCommunicationPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Gets the UAV communication.</description>
+  </class>
+  <class name="mapviz_plugins/intrepid/autopilot_intrepid_scan_area" type="mapviz_plugins::AutopilotIntrepidScanAreaPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Publish a polygon to be explored by the robot</description>
+  </class>
+  <class name="mapviz_plugins/intrepid/autopilot_intrepid_mission_config" type="mapviz_plugins::AutopilotIntrepidMissionPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Accept INTREPID Mission Plan.</description>
   </class>
   <class name="mapviz_plugins/autopilot_emergency_button" type="mapviz_plugins::AutopilotEmergencyButtonPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Sends emergency stop signal.</description>
@@ -90,9 +96,6 @@
   </class>
   <class name="mapviz_plugins/point_click_publisher" type="mapviz_plugins::PointClickPublisherPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Publishes a StampedPoint when a point on the map canvas is clicked.</description>
-  </class>
-  <class name="mapviz_plugins/scan_area" type="mapviz_plugins::ScanAreaPlugin" base_class_type="mapviz::MapvizPlugin">
-    <description>Publish a polygon to be explored by the robot</description>
   </class>
   <class name="mapviz_plugins/send_gps_goal" type="mapviz_plugins::SendGPSGoalPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Publish a GPS goal by clicking on the map</description>

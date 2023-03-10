@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>autopilot_mission_config</class>
- <widget class="QWidget" name="autopilot_mission_config">
+ <class>autopilot_crest_mission_config</class>
+ <widget class="QWidget" name="autopilot_crest_mission_config">
   <property name="geometry">
    <rect>
     <x>0</x>

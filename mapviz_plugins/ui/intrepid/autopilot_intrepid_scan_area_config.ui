@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>scan_area_config</class>
- <widget class="QWidget" name="scan_area_config">
+ <class>autopilot_intrepid_scan_area_config</class>
+ <widget class="QWidget" name="autopilot_intrepid_scan_area_config">
   <property name="geometry">
    <rect>
     <x>0</x>
