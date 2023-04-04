@@ -92,6 +92,8 @@ namespace mapviz_plugins
 
     QTimer frame_timer_;
     ros::Publisher point_publisher_;
+    ros::ServiceClient confirm_;
+    void confirmMission();
   };
 }
 

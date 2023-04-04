@@ -78,7 +78,7 @@ MeasuringPlugin::MeasuringPlugin():
                    SLOT(AlphaChanged(double)));
   connect(ui_.main_color, SIGNAL(colorEdited(const QColor &)), this, SLOT(DrawIcon()));
   connect(ui_.bkgnd_color, SIGNAL(colorEdited(const QColor &)), this, SLOT(DrawIcon()));
-  
+
 #if QT_VERSION >= 0x050000
   ui_.measurement->setText(tr("Click on the map. Distance between clicks will appear here"));
   ui_.totaldistance->setText(tr("Click on the map. Total distance between clicks will appear here"));
@@ -430,14 +430,14 @@ void MeasuringPlugin::Paint(QPainter* painter, double x, double y, double scale)
 void MeasuringPlugin::LoadConfig(const YAML::Node& node, const std::string& path)
 {
   if (node["main_color"])
-  {            
+  {
     std::string color;
     node["main_color"] >> color;
     ui_.main_color->setColor(QColor(color.c_str()));
   }
 
   if (node["bkgnd_color"])
-  {            
+  {
     std::string color;
     node["bkgnd_color"] >> color;
     ui_.bkgnd_color->setColor(QColor(color.c_str()));

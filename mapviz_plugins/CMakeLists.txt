@@ -3,6 +3,7 @@ project(mapviz_plugins)
 
 set(DEPENDENCIES
   actionlib
+  actionlib_msgs
   cv_bridge
   gps_common
   image_transport
@@ -13,19 +14,21 @@ set(DEPENDENCIES
   marti_visualization_msgs
   move_base_msgs
   nav_msgs
+  std_srvs
   map_msgs
-  pluginlib 
-  roscpp 
+  pluginlib
+  roscpp
   sensor_msgs
-  std_msgs 
+  std_msgs
   stereo_msgs
   swri_image_util
   swri_math_util
   swri_route_util
   swri_transform_util
   swri_yaml_util
-  tf 
+  tf
   visualization_msgs
+  autopilot_msgs
 )
 
 find_package(catkin REQUIRED COMPONENTS ${DEPENDENCIES})
@@ -76,6 +79,13 @@ include_directories(SYSTEM
 
 set(UI_FILES
     ui/attitude_indicator_config.ui
+    ui/autopilot_waypoints_config.ui
+    ui/autopilot_emergency_button_config.ui
+    ui/autopilot_auto_manual_button_config.ui
+    ui/crest/autopilot_uav_communication_config.ui
+    ui/crest/autopilot_crest_mission_config.ui
+    ui/intrepid/autopilot_intrepid_scan_area_config.ui
+    ui/intrepid/autopilot_intrepid_mission_config.ui
     ui/coordinate_picker_config.ui
     ui/disparity_config.ui
     ui/draw_polygon_config.ui
@@ -88,6 +98,7 @@ set(UI_FILES
     ui/marti_nav_path_config.ui
     ui/marti_nav_plan_config.ui
     ui/measuring_config.ui
+    ui/mission_command_config.ui
     ui/move_base_config.ui
     ui/navsat_config.ui
     ui/object_config.ui
@@ -101,15 +112,25 @@ set(UI_FILES
     ui/pose_config.ui
     ui/pose_publisher_config.ui
     ui/robot_image_config.ui
+    ui/robot_status_config.ui
     ui/route_config.ui
+    ui/send_gps_goal_config.ui
     ui/string_config.ui
+    ui/swarm_event_config.ui
     ui/textured_marker_config.ui
     ui/tf_frame_config.ui
     ui/topic_select.ui
 )
 
 set(SRC_FILES
-    src/attitude_indicator_plugin.cpp 
+    src/attitude_indicator_plugin.cpp
+    src/autopilot_waypoints_plugin.cpp
+    src/autopilot_emergency_button_plugin.cpp
+    src/autopilot_auto_manual_button_plugin.cpp
+    src/crest/autopilot_crest_mission_plugin.cpp
+    src/crest/autopilot_uav_communication_plugin.cpp
+    src/intrepid/autopilot_intrepid_scan_area_plugin.cpp
+    src/intrepid/autopilot_intrepid_mission_plugin.cpp
     src/canvas_click_filter.cpp
     src/coordinate_picker_plugin.cpp
     src/disparity_plugin.cpp
@@ -119,15 +140,16 @@ set(SRC_FILES
     src/grid_plugin.cpp
     src/image_plugin.cpp
     src/laserscan_plugin.cpp
+    src/marker_plugin.cpp
+    src/measuring_plugin.cpp
+    src/mission_command_plugin.cpp
     src/marti_nav_path_plugin.cpp
     src/marti_nav_plan_plugin.cpp
-    src/marker_plugin.cpp 
-    src/measuring_plugin.cpp 
     src/move_base_plugin.cpp
     src/navsat_plugin.cpp
     src/object_plugin.cpp
     src/occupancy_grid_plugin.cpp
-    src/odometry_plugin.cpp 
+    src/odometry_plugin.cpp
     src/path_plugin.cpp
     src/placeable_window_proxy.cpp
     src/plan_route_plugin.cpp
@@ -138,14 +160,24 @@ set(SRC_FILES
     src/pose_plugin.cpp
     src/pose_publisher_plugin.cpp
     src/robot_image_plugin.cpp
+    src/robot_status_plugin.cpp
     src/route_plugin.cpp
+    src/send_gps_goal_plugin.cpp
     src/string_plugin.cpp
+    src/swarm_event_plugin.cpp
     src/textured_marker_plugin.cpp
     src/tf_frame_plugin.cpp
 )
 
 set(HEADER_FILES
     include/${PROJECT_NAME}/attitude_indicator_plugin.h
+    include/${PROJECT_NAME}/autopilot_waypoints_plugin.h
+    include/${PROJECT_NAME}/autopilot_emergency_button_plugin.h
+    include/${PROJECT_NAME}/autopilot_auto_manual_button_plugin.h
+    include/${PROJECT_NAME}/crest/autopilot_crest_mission_plugin.h
+    include/${PROJECT_NAME}/crest/autopilot_uav_communication_plugin.h
+    include/${PROJECT_NAME}/intrepid/autopilot_intrepid_scan_area_plugin.h
+    include/${PROJECT_NAME}/intrepid/autopilot_intrepid_mission_plugin.h
     include/${PROJECT_NAME}/canvas_click_filter.h
     include/${PROJECT_NAME}/coordinate_picker_plugin.h
     include/${PROJECT_NAME}/disparity_plugin.h
@@ -159,6 +191,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/marti_nav_plan_plugin.h
     include/${PROJECT_NAME}/marker_plugin.h
     include/${PROJECT_NAME}/measuring_plugin.h
+    include/${PROJECT_NAME}/mission_command_plugin.h
     include/${PROJECT_NAME}/move_base_plugin.h
     include/${PROJECT_NAME}/navsat_plugin.h
     include/${PROJECT_NAME}/object_plugin.h
@@ -175,8 +208,11 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/pose_plugin.h
     include/${PROJECT_NAME}/pose_publisher_plugin.h
     include/${PROJECT_NAME}/robot_image_plugin.h
+    include/${PROJECT_NAME}/robot_status_plugin.h
     include/${PROJECT_NAME}/route_plugin.h
+    include/${PROJECT_NAME}/send_gps_goal_plugin.h
     include/${PROJECT_NAME}/string_plugin.h
+    include/${PROJECT_NAME}/swarm_event_plugin.h
     include/${PROJECT_NAME}/textured_marker_plugin.h
     include/${PROJECT_NAME}/tf_frame_plugin.h
 )
@@ -222,4 +258,3 @@ install(TARGETS ${PROJECT_NAME}
 install(FILES ${PROJECT_NAME}.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
-

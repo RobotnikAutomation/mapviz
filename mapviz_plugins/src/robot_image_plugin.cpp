@@ -89,6 +89,8 @@ namespace mapviz_plugins
     QObject::connect(ui_.ratio_equal, SIGNAL(toggled(bool)), this, SLOT(RatioEqualToggled(bool)));
     QObject::connect(ui_.ratio_custom, SIGNAL(toggled(bool)), this, SLOT(RatioCustomToggled(bool)));
     QObject::connect(ui_.ratio_original, SIGNAL(toggled(bool)), this, SLOT(RatioOriginalToggled(bool)));
+    
+    navsat_sub_ = node_.subscribe("/robot/gps/fix", 10, &RobotImagePlugin::NavSatFixCallback, this);
   }
 
   RobotImagePlugin::~RobotImagePlugin()
@@ -134,7 +136,7 @@ namespace mapviz_plugins
 
     ROS_INFO("Setting target frame to to %s", source_frame_.c_str());
 
-    initialized_ = true;
+    initialized_ = false;
 
     UpdateShape();
   }
@@ -264,9 +266,11 @@ namespace mapviz_plugins
   {
     transformed_ = false;
 
-    swri_transform_util::Transform transform;
-    if (GetTransform(ros::Time(), transform))
+
+    if (has_message_)
     {
+        tf::Transform t(stamped_point.orientation, stamped_point.point);
+        swri_transform_util::Transform transform(t);
       top_left_transformed_ = transform * top_left_;
       top_right_transformed_ = transform * top_right_;
       bottom_left_transformed_ = transform * bottom_left_;
@@ -277,6 +281,19 @@ namespace mapviz_plugins
     {
       PrintError("No transform between " + source_frame_ + " and " + target_frame_);
     }
+
+//    if (GetTransform(ros::Time(), transform))
+//    {
+//      top_left_transformed_ = transform * top_left_;
+//      top_right_transformed_ = transform * top_right_;
+//      bottom_left_transformed_ = transform * bottom_left_;
+//      bottom_right_transformed_ = transform * bottom_right_;
+//      transformed_ = true;
+//    }
+//    else
+//    {
+//      PrintError("No transform between " + source_frame_ + " and " + target_frame_);
+//    }
   }
 
   void RobotImagePlugin::LoadImage()
@@ -438,6 +455,34 @@ namespace mapviz_plugins
     {
       emitter << YAML::Key << "ratio" << YAML::Value << "original";
     }
+  }
+  void RobotImagePlugin::NavSatFixCallback(
+      const sensor_msgs::NavSatFixConstPtr navsat)
+  {
+    if (!tf_manager_->LocalXyUtil()->Initialized())
+    {
+      return;
+    }
+    if (!has_message_)
+    {
+      initialized_ = true;
+      has_message_ = true;
+    }
+
+    stamped_point.stamp = navsat->header.stamp;
+
+    double x;
+    double y;
+    tf_manager_->LocalXyUtil()->ToLocalXy(navsat->latitude, navsat->longitude, x, y);
+
+    stamped_point.point = tf::Point(x, y, navsat->altitude);
+
+    
+    swri_transform_util::Transform transform;
+    if (tf_manager_->GetTransform("utm", "robot_base_footprint", ros::Time(0), transform))
+
+    stamped_point.orientation = transform.GetOrientation();
+    stamped_point.source_frame = tf_manager_->LocalXyUtil()->Frame();
   }
 }
 

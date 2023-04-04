@@ -1,11 +1,32 @@
 <library path="lib/libmapviz_plugins">
-  <class name="mapviz_plugins/attitude_indicator" 
-         type="mapviz_plugins::AttitudeIndicatorPlugin" 
+  <class name="mapviz_plugins/attitude_indicator"
+         type="mapviz_plugins::AttitudeIndicatorPlugin"
          base_class_type="mapviz::MapvizPlugin">
     <description>
       Plugin to provide an intuitive visualization of orientations
       from IMU messages, Odometry messages, and Tf messages.
     </description>
+  </class>
+  <class name="mapviz_plugins/autopilot_auto_manual_button" type="mapviz_plugins::AutopilotAutoManualButtonPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Specifies manual or automatic mode.</description>
+  </class>
+  <class name="mapviz_plugins/crest/autopilot_crest_mission_config" type="mapviz_plugins::AutopilotCrestMissionPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Accept CREST Mission Plan and Swarm Event.</description>
+  </class>
+  <class name="mapviz_plugins/crest/autopilot_uav_communication_config" type="mapviz_plugins::AutopilotUAVCommunicationPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Gets the UAV communication.</description>
+  </class>
+  <class name="mapviz_plugins/intrepid/autopilot_intrepid_scan_area" type="mapviz_plugins::AutopilotIntrepidScanAreaPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Publish a polygon to be explored by the robot</description>
+  </class>
+  <class name="mapviz_plugins/intrepid/autopilot_intrepid_mission_config" type="mapviz_plugins::AutopilotIntrepidMissionPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Accept INTREPID Mission Plan.</description>
+  </class>
+  <class name="mapviz_plugins/autopilot_emergency_button" type="mapviz_plugins::AutopilotEmergencyButtonPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Sends emergency stop signal.</description>
+  </class>
+  <class name="mapviz_plugins/autopilot_waypoints" type="mapviz_plugins::AutopilotWaypointsPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Plots autopilot waypoints.</description>
   </class>
   <class name="mapviz_plugins/coordinate_picker" type="mapviz_plugins::CoordinatePickerPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Prints clicked coordinates in specified frame and copies to clipboard.</description>
@@ -27,6 +48,9 @@
   </class>
   <class name="mapviz_plugins/textured_marker" type="mapviz_plugins::TexturedMarkerPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Textured marker mapviz plugin.</description>
+  </class>
+  <class name="mapviz_plugins/mission_command" type="mapviz_plugins::MissionCommandPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Interface to the [mission_command] action server.</description>
   </class>
   <class name="mapviz_plugins/move_base" type="mapviz_plugins::MoveBasePlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Interface to the [move_base] action server.</description>
@@ -64,6 +88,9 @@
   <class name="mapviz_plugins/robot_image" type="mapviz_plugins::RobotImagePlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Robot image mapviz plugin.</description>
   </class>
+  <class name="mapviz_plugins/robot_status" type="mapviz_plugins::RobotStatusPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Robot status mapviz plugin.</description>
+  </class>
   <class name="mapviz_plugins/gps" type="mapviz_plugins::GpsPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>GPS mapviz plugin.</description>
   </class>
@@ -79,11 +106,16 @@
   <class name="mapviz_plugins/point_click_publisher" type="mapviz_plugins::PointClickPublisherPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Publishes a StampedPoint when a point on the map canvas is clicked.</description>
   </class>
+  <class name="mapviz_plugins/send_gps_goal" type="mapviz_plugins::SendGPSGoalPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Publish a GPS goal by clicking on the map</description>
   <class name="mapviz_plugins/pose_publisher" type="mapviz_plugins::PosePublisherPlugin" base_class_type="mapviz::MapvizPlugin">
       <description>Publishes a PoseWithCovarianceStamped when a point on the map canvas is clicked.  Orientation is set by dragging away from that point and releasing the mouse button.</description>
   </class>
   <class name="mapviz_plugins/string" type="mapviz_plugins::StringPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Displays a std_msgs/String at a fixed point on the canvas.</description>
+  </class>
+  <class name="mapviz_plugins/swarm_event" type="mapviz_plugins::SwarmEventPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Interface to the [swarm_event] action server.</description>
   </class>
   <class name="mapviz_plugins/float" type="mapviz_plugins::FloatPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Displays a float and velocity messages at a fixed point on the canvas.</description>
@@ -95,4 +127,3 @@
     <description>Display marti_nav_msgs::Obstacles and TrackedObjects</description>
   </class>
 </library>
-

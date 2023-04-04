@@ -58,6 +58,7 @@
 #include <tf/transform_listener.h>
 #include <yaml-cpp/yaml.h>
 #include <std_srvs/Empty.h>
+#include <sensor_msgs/Joy.h>
 
 // Auto-generated UI files
 #include "ui_mapviz.h"
@@ -174,6 +175,8 @@ namespace mapviz
 
     ros::NodeHandle* node_;
     ros::ServiceServer add_display_srv_;
+    ros::Subscriber joy_sub;
+    ros::Publisher joy_pub;
     boost::shared_ptr<tf::TransformListener> tf_;
     swri_transform_util::TransformManagerPtr tf_manager_;
 
@@ -202,6 +205,8 @@ namespace mapviz
 
     virtual void showEvent(QShowEvent* event);
     virtual void closeEvent(QCloseEvent* event);
+
+    void joyCallback(const sensor_msgs::Joy& msg);
 
     static const QString ROS_WORKSPACE_VAR;
     static const QString MAPVIZ_CONFIG_FILE;
