@@ -95,6 +95,8 @@ set(UI_FILES
     ui/image_config.ui
     ui/laserscan_config.ui
     ui/marker_config.ui
+    ui/marti_nav_path_config.ui
+    ui/marti_nav_plan_config.ui
     ui/measuring_config.ui
     ui/mission_command_config.ui
     ui/move_base_config.ui
@@ -106,7 +108,9 @@ set(UI_FILES
     ui/plan_route_config.ui
     ui/point_click_publisher_config.ui
     ui/pointcloud2_config.ui
+    ui/pose_array_config.ui
     ui/pose_config.ui
+    ui/pose_publisher_config.ui
     ui/robot_image_config.ui
     ui/robot_status_config.ui
     ui/route_config.ui
@@ -139,6 +143,8 @@ set(SRC_FILES
     src/marker_plugin.cpp
     src/measuring_plugin.cpp
     src/mission_command_plugin.cpp
+    src/marti_nav_path_plugin.cpp
+    src/marti_nav_plan_plugin.cpp
     src/move_base_plugin.cpp
     src/navsat_plugin.cpp
     src/object_plugin.cpp
@@ -150,7 +156,9 @@ set(SRC_FILES
     src/point_click_publisher_plugin.cpp
     src/pointcloud2_plugin.cpp
     src/point_drawing_plugin.cpp
+    src/pose_array_plugin.cpp
     src/pose_plugin.cpp
+    src/pose_publisher_plugin.cpp
     src/robot_image_plugin.cpp
     src/robot_status_plugin.cpp
     src/route_plugin.cpp
@@ -179,6 +187,8 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/grid_plugin.h
     include/${PROJECT_NAME}/image_plugin.h
     include/${PROJECT_NAME}/laserscan_plugin.h
+    include/${PROJECT_NAME}/marti_nav_path_plugin.h
+    include/${PROJECT_NAME}/marti_nav_plan_plugin.h
     include/${PROJECT_NAME}/marker_plugin.h
     include/${PROJECT_NAME}/measuring_plugin.h
     include/${PROJECT_NAME}/mission_command_plugin.h
@@ -194,7 +204,9 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/point_click_publisher_plugin.h
     include/${PROJECT_NAME}/pointcloud2_plugin.h
     include/${PROJECT_NAME}/point_drawing_plugin.h
+    include/${PROJECT_NAME}/pose_array_plugin.h
     include/${PROJECT_NAME}/pose_plugin.h
+    include/${PROJECT_NAME}/pose_publisher_plugin.h
     include/${PROJECT_NAME}/robot_image_plugin.h
     include/${PROJECT_NAME}/robot_status_plugin.h
     include/${PROJECT_NAME}/route_plugin.h
@@ -222,8 +234,14 @@ target_link_libraries(${PROJECT_NAME}
     ${Qt_LIBRARIES}
 )
 
+if ($ENV{ROS_DISTRO} STREQUAL "kinetic" OR $ENV{ROS_DISTRO} STRLESS "kinetic")
+  set_target_properties(${PROJECT_NAME} PROPERTIES 
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON
+  )
+endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES
-  COMPILE_FLAGS "-std=c++11 -D__STDC_FORMAT_MACROS"
+  COMPILE_FLAGS "-D__STDC_FORMAT_MACROS"
 )
 
 ### Install the plugins ###
