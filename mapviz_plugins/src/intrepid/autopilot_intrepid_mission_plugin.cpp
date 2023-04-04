@@ -32,6 +32,7 @@ namespace mapviz_plugins
     ui_.CommandAcceptButton->setEnabled(false);
 
     mission_command_request_sub_ = node_.subscribe("mission_command_request", 1, &AutopilotIntrepidMissionPlugin::MissionCommandRequestCB, this);
+    mission_command_cancel_sub_ = node_.subscribe("mission_command_cancel", 1, &AutopilotIntrepidMissionPlugin::MissionCommandCancelCB, this);
 
     accept_command_pub_ = node_.advertise<std_msgs::Empty>("accept_command", 1);
   }
@@ -71,12 +72,21 @@ namespace mapviz_plugins
       scan_area_timer_ = node_.createTimer(ros::Duration(1), &AutopilotIntrepidMissionPlugin::flashingScanArea, this);
   }
 
+  void AutopilotIntrepidMissionPlugin::MissionCommandCancelCB(const std_msgs::Empty &msg)
+  {
+    turnOffFlashing();
+  }
+
   void AutopilotIntrepidMissionPlugin::AcceptCommand()
   {
-    QPalette p_text;
-
     std_msgs::Empty msg;
     accept_command_pub_.publish(msg);
+    turnOffFlashing();
+  }
+
+  void AutopilotIntrepidMissionPlugin::turnOffFlashing()
+  {
+    QPalette p_text;
 
     goto_timer_.stop();
     scan_area_timer_.stop();

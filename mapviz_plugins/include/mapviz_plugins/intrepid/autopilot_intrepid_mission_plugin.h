@@ -50,11 +50,13 @@ namespace mapviz_plugins
 
     protected Q_SLOTS:
     void MissionCommandRequestCB(const std_msgs::String &msg);
+    void MissionCommandCancelCB(const std_msgs::Empty &msg);
     void AcceptCommand();
     void flashingGoTo(const ros::TimerEvent& event);
     void flashingScanArea(const ros::TimerEvent& event);
     void flashingPickUp(const ros::TimerEvent& event);
     void flashingPutDown(const ros::TimerEvent& event);
+    void turnOffFlashing();
 
     private:
     Ui::autopilot_intrepid_mission_config ui_;
@@ -65,7 +67,7 @@ namespace mapviz_plugins
     ros::Timer goto_timer_, scan_area_timer_, pick_up_timer_, put_down_timer_;
 
     ros::Publisher accept_command_pub_;
-    ros::Subscriber mission_command_request_sub_;
+    ros::Subscriber mission_command_request_sub_, mission_command_cancel_sub_;
 
     bool goto_flashing_ = false, scan_area_flashing_ = false, pick_up_flashing_ = false, put_down_flashing_ = false;
     };

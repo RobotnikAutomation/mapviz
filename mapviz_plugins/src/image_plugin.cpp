@@ -383,6 +383,7 @@ namespace mapviz_plugins
     }
 
     cv::resize(cv_image_->image, scaled_image_, cvSize2D32f(width, height), 0, 0, CV_INTER_AREA);
+    ROS_INFO("SCALED IMAGE");
   }
 
   void ImagePlugin::DrawIplImage(cv::Mat *image)
@@ -687,4 +688,3 @@ namespace mapviz_plugins
     CreateLocalNode();
   }
 }
-
