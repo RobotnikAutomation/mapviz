@@ -50,7 +50,7 @@ set(Qt_LIBS
     )
 add_definitions(-DWFlags=WindowFlags)
 
-find_package(OpenCV COMPONENTS core imgproc REQUIRED)
+find_package(OpenCV 3.0.0 COMPONENTS core imgproc REQUIRED)
 
 ### OpenGL ###
 if(${CMAKE_VERSION} VERSION_EQUAL "3.11.0" OR ${CMAKE_VERSION} VERSION_GREATER "3.11.0")
@@ -235,7 +235,7 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 if ($ENV{ROS_DISTRO} STREQUAL "kinetic" OR $ENV{ROS_DISTRO} STRLESS "kinetic")
-  set_target_properties(${PROJECT_NAME} PROPERTIES 
+  set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED ON
   )

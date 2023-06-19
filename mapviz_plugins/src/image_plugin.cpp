@@ -383,7 +383,7 @@ namespace mapviz_plugins
     }
 
     cv::resize(cv_image_->image, scaled_image_, cvSize2D32f(width, height), 0, 0, CV_INTER_AREA);
-    ROS_INFO("SCALED IMAGE");
+
   }
 
   void ImagePlugin::DrawIplImage(cv::Mat *image)
@@ -506,6 +506,23 @@ namespace mapviz_plugins
     DrawIplImage(&scaled_image_);
 
     glPopMatrix();
+
+    // glLineWidth(5);
+    // QColor color;
+    // glBegin(GL_LINE_STRIP);
+    // color = QColor(Qt::red);
+    // glColor4d(color.redF(), color.greenF(), color.blueF(), 0.5/2.0);
+    // glVertex2d(-62, 18);
+    // glVertex2d(-55, 18 + 10);
+    // glEnd();
+    //
+    // glLineWidth(5);
+    // glBegin(GL_LINE_STRIP);
+    // color = QColor(Qt::red);
+    // glColor4d(color.redF(), color.greenF(), color.blueF(), 0.5/2.0);
+    // glVertex2d(-41, 18);
+    // glVertex2d(-49, 18 + 10);
+    // glEnd();
 
     last_width_ = width;
     last_height_ = height;
