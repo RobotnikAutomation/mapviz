@@ -50,7 +50,7 @@ set(Qt_LIBS
     )
 add_definitions(-DWFlags=WindowFlags)
 
-find_package(OpenCV 3.0.0 COMPONENTS core imgproc REQUIRED)
+find_package(OpenCV 4.0.0 COMPONENTS core imgproc REQUIRED)
 
 ### OpenGL ###
 if(${CMAKE_VERSION} VERSION_EQUAL "3.11.0" OR ${CMAKE_VERSION} VERSION_GREATER "3.11.0")
