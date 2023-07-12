@@ -86,6 +86,7 @@ set(UI_FILES
     ui/crest/autopilot_crest_mission_config.ui
     ui/intrepid/autopilot_intrepid_scan_area_config.ui
     ui/intrepid/autopilot_intrepid_mission_config.ui
+    ui/fiqugs/autopilot_fiqugs_area_exploration_config.ui
     ui/coordinate_picker_config.ui
     ui/disparity_config.ui
     ui/draw_polygon_config.ui
@@ -131,6 +132,7 @@ set(SRC_FILES
     src/crest/autopilot_uav_communication_plugin.cpp
     src/intrepid/autopilot_intrepid_scan_area_plugin.cpp
     src/intrepid/autopilot_intrepid_mission_plugin.cpp
+    src/fiqugs/autopilot_fiqugs_area_exploration_plugin.cpp
     src/canvas_click_filter.cpp
     src/coordinate_picker_plugin.cpp
     src/disparity_plugin.cpp
@@ -178,6 +180,7 @@ set(HEADER_FILES
     include/${PROJECT_NAME}/crest/autopilot_uav_communication_plugin.h
     include/${PROJECT_NAME}/intrepid/autopilot_intrepid_scan_area_plugin.h
     include/${PROJECT_NAME}/intrepid/autopilot_intrepid_mission_plugin.h
+    include/${PROJECT_NAME}/fiqugs/autopilot_fiqugs_area_exploration_plugin.h
     include/${PROJECT_NAME}/canvas_click_filter.h
     include/${PROJECT_NAME}/coordinate_picker_plugin.h
     include/${PROJECT_NAME}/disparity_plugin.h
