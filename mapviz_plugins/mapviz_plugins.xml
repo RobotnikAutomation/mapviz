@@ -22,6 +22,9 @@
   <class name="mapviz_plugins/intrepid/autopilot_intrepid_mission_config" type="mapviz_plugins::AutopilotIntrepidMissionPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Accept INTREPID Mission Plan.</description>
   </class>
+  <class name="mapviz_plugins/fiqugs/autopilot_fiqugs_area_exploration_config" type="mapviz_plugins::AutopilotFiqugsAreaExplorationPlugin" base_class_type="mapviz::MapvizPlugin">
+    <description>Area definition and path creator.</description>
+  </class>
   <class name="mapviz_plugins/autopilot_emergency_button" type="mapviz_plugins::AutopilotEmergencyButtonPlugin" base_class_type="mapviz::MapvizPlugin">
     <description>Sends emergency stop signal.</description>
   </class>
