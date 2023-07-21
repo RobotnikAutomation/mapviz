@@ -101,6 +101,7 @@ namespace mapviz_plugins
    cancel_pub_ = node_.advertise<std_msgs::Empty>("cancel", 1, true);
 
    waypoints_subscriber_ = node_.subscribe("/robot/autopilot_cartesian_area_navigator/cartesian_waypoints", 1, &AutopilotFiqugsAreaExplorationPlugin::waypointsCallback, this);
+   no_headlands_subscriber_ = node_.subscribe("/field/no_headlands", 1, &AutopilotFiqugsAreaExplorationPlugin::noHeadlandsCallback, this);
  }
 
   AutopilotFiqugsAreaExplorationPlugin::~AutopilotFiqugsAreaExplorationPlugin()
@@ -157,7 +158,9 @@ namespace mapviz_plugins
 
     creating_polygon_ = false;
     ui_.createPolygon->setEnabled(true);
-    ui_.clear->setEnabled(false);
+    // ui_.clear->setEnabled(false);
+    ui_.sendButton->setEnabled(true);
+    ui_.cancelButton->setEnabled(true);
   }
 
   void AutopilotFiqugsAreaExplorationPlugin::Clear()
@@ -165,10 +168,13 @@ namespace mapviz_plugins
     vertices_.clear();
     path_vertices_.clear();
     transformed_vertices_.clear();
+    no_headlands_polygon_vertices_.clear();
     creating_polygon_ = false;
     ui_.createPolygon->setEnabled(true);
     ui_.clear->setEnabled(false);
     ui_.publish->setEnabled(false);
+    ui_.sendButton->setEnabled(false);
+    ui_.cancelButton->setEnabled(false);
   }
 
   void AutopilotFiqugsAreaExplorationPlugin::CreatePolygon()
@@ -201,6 +207,19 @@ namespace mapviz_plugins
       double y = waypoints.poses[i].pose.pose.position.y;
       tf::Vector3 position(x, y, 0.0);
       path_vertices_.push_back(position);
+    }
+    return;
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::noHeadlandsCallback(const geometry_msgs::PolygonStamped no_headlands_polygon)
+  {
+    no_headlands_polygon_vertices_.clear();
+    for (unsigned int i = 0; i < no_headlands_polygon.polygon.points.size(); i++)
+    {
+      double x = no_headlands_polygon.polygon.points[i].x;
+      double y = no_headlands_polygon.polygon.points[i].y;
+      tf::Vector3 position(x, y, 0.0);
+      no_headlands_polygon_vertices_.push_back(position);
     }
     return;
   }
@@ -463,7 +482,7 @@ namespace mapviz_plugins
 
     // Draw path
     glLineWidth(1);
-    // glColor4d(color.redF(), color.greenF(), color.blueF(), ui_.alpha->value()/2.0);
+
     glBegin(GL_LINE_STRIP);
 
     for (const auto& vertex: path_vertices_)
@@ -475,9 +494,6 @@ namespace mapviz_plugins
 
     glEnd();
 
-    // glBegin(GL_LINES);
-    // glEnd();
-
     // Draw vertices
     glPointSize(5);
     glBegin(GL_POINTS);
@@ -485,6 +501,32 @@ namespace mapviz_plugins
     for (const auto& vertex: path_vertices_)
     {
       glColor4d(51, 51, 255, 1.0);
+
+      glVertex2d(vertex.x(), vertex.y());
+    }
+    glEnd();
+
+    // Draw no headland polygon
+    glLineWidth(1);
+
+    glBegin(GL_LINE_STRIP);
+
+    for (const auto& vertex: no_headlands_polygon_vertices_)
+    {
+      glColor4d(1.0, 0.0, 0.0, 1.0);
+
+      glVertex2d(vertex.x(), vertex.y());
+    }
+
+    glEnd();
+
+    // Draw vertices
+    glPointSize(9);
+    glBegin(GL_POINTS);
+
+    for (const auto& vertex: no_headlands_polygon_vertices_)
+    {
+      glColor4d(1.0, 0.0, 0.0, 1.0);
 
       glVertex2d(vertex.x(), vertex.y());
     }
