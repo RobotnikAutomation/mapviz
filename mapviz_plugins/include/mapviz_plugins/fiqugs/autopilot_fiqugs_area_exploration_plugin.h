@@ -102,6 +102,8 @@ namespace mapviz_plugins
 
     void waypointsCallback(const autopilot_msgs::AutopilotPath waypoints);
 
+    void noHeadlandsCallback(const geometry_msgs::PolygonStamped no_headlands_polygon);
+
    private:
     Ui::autopilot_fiqugs_area_exploration_config ui_;
     QWidget* config_widget_;
@@ -111,10 +113,11 @@ namespace mapviz_plugins
     ros::Publisher cancel_pub_;
 
     ros::Subscriber waypoints_subscriber_;
+    ros::Subscriber no_headlands_subscriber_;
 
     boost::scoped_ptr<actionlib::SimpleActionClient<autopilot_msgs::CartesianAreaAction>> cartesian_area_ac_;
 
-    std::vector<tf::Vector3> vertices_, path_vertices_;
+    std::vector<tf::Vector3> vertices_, path_vertices_, no_headlands_polygon_vertices_;
     std::vector<tf::Vector3> transformed_vertices_;
 
     int selected_point_;
