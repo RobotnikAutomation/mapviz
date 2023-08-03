@@ -93,13 +93,16 @@ namespace mapviz_plugins
     QObject::connect(ui_.cancelButton, SIGNAL(clicked()), this,
                      SLOT(Cancel()));
 
-    cartesian_area_namespace_ = "autopilot_cartesian_area_navigator/cartesian_area_action";
-    cartesian_area_ac_.reset(
-       new actionlib::SimpleActionClient<autopilot_msgs::CartesianAreaAction>(node_, cartesian_area_namespace_, true));
+   cartesian_area_namespace_ = "autopilot_cartesian_area_navigator/cartesian_area_action";
+   cartesian_area_ac_.reset(
+      new actionlib::SimpleActionClient<autopilot_msgs::CartesianAreaAction>(node_, cartesian_area_namespace_, true));
 
-    accept_mission_pub_ = node_.advertise<std_msgs::Empty>("accept_goal", 1, true);
-    cancel_pub_ = node_.advertise<std_msgs::Empty>("cancel", 1, true);
-  }
+   accept_mission_pub_ = node_.advertise<std_msgs::Empty>("accept_goal", 1, true);
+   cancel_pub_ = node_.advertise<std_msgs::Empty>("cancel", 1, true);
+
+   waypoints_subscriber_ = node_.subscribe("/robot/autopilot_cartesian_area_navigator/cartesian_waypoints", 1, &AutopilotFiqugsAreaExplorationPlugin::waypointsCallback, this);
+   no_headlands_subscriber_ = node_.subscribe("/field/no_headlands", 1, &AutopilotFiqugsAreaExplorationPlugin::noHeadlandsCallback, this);
+ }
 
   AutopilotFiqugsAreaExplorationPlugin::~AutopilotFiqugsAreaExplorationPlugin()
   {
@@ -131,7 +134,8 @@ namespace mapviz_plugins
 
   void AutopilotFiqugsAreaExplorationPlugin::PublishPolygon()
   {
-    autopilot_msgs::CartesianArea area;
+    autopilot_msgs::CartesianAreaGoal area;
+
     area.target.header.stamp = ros::Time::now();
     area.target.header.frame_id = ui_.frame->text().toStdString();
 
@@ -144,22 +148,34 @@ namespace mapviz_plugins
       area.target.polygon.points.push_back(point);
     }
 
+    geometry_msgs::Point32 last_point;
+    last_point.x = vertices_[0].x();
+    last_point.y = vertices_[0].y();
+    last_point.z = 0;
+    area.target.polygon.points.push_back(last_point);
+
     if(cartesian_area_ac_->isServerConnected())
     cartesian_area_ac_->sendGoal(area);
 
     creating_polygon_ = false;
     ui_.createPolygon->setEnabled(true);
-    ui_.clear->setEnabled(false);
+    // ui_.clear->setEnabled(false);
+    ui_.sendButton->setEnabled(true);
+    ui_.cancelButton->setEnabled(true);
   }
 
   void AutopilotFiqugsAreaExplorationPlugin::Clear()
   {
     vertices_.clear();
+    path_vertices_.clear();
     transformed_vertices_.clear();
+    no_headlands_polygon_vertices_.clear();
     creating_polygon_ = false;
     ui_.createPolygon->setEnabled(true);
     ui_.clear->setEnabled(false);
     ui_.publish->setEnabled(false);
+    ui_.sendButton->setEnabled(false);
+    ui_.cancelButton->setEnabled(false);
   }
 
   void AutopilotFiqugsAreaExplorationPlugin::CreatePolygon()
@@ -180,6 +196,32 @@ namespace mapviz_plugins
   {
     std_msgs::Empty msg;
     accept_mission_pub_.publish(msg);
+    return;
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::waypointsCallback(const autopilot_msgs::AutopilotPath waypoints)
+  {
+    path_vertices_.clear();
+    for (unsigned int i = 0; i < waypoints.poses.size(); i++)
+    {
+      double x = waypoints.poses[i].pose.pose.position.x;
+      double y = waypoints.poses[i].pose.pose.position.y;
+      tf::Vector3 position(x, y, 0.0);
+      path_vertices_.push_back(position);
+    }
+    return;
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::noHeadlandsCallback(const geometry_msgs::PolygonStamped no_headlands_polygon)
+  {
+    no_headlands_polygon_vertices_.clear();
+    for (unsigned int i = 0; i < no_headlands_polygon.polygon.points.size(); i++)
+    {
+      double x = no_headlands_polygon.polygon.points[i].x;
+      double y = no_headlands_polygon.polygon.points[i].y;
+      tf::Vector3 position(x, y, 0.0);
+      no_headlands_polygon_vertices_.push_back(position);
+    }
     return;
   }
 
@@ -438,6 +480,59 @@ namespace mapviz_plugins
     }
     glEnd();
 
+
+    // Draw path
+    glLineWidth(1);
+
+    glBegin(GL_LINE_STRIP);
+
+    for (const auto& vertex: path_vertices_)
+    {
+      glColor4d(51, 51, 255, 1.0);
+
+      glVertex2d(vertex.x(), vertex.y());
+    }
+
+    glEnd();
+
+    // Draw vertices
+    glPointSize(5);
+    glBegin(GL_POINTS);
+
+    for (const auto& vertex: path_vertices_)
+    {
+      glColor4d(51, 51, 255, 1.0);
+
+      glVertex2d(vertex.x(), vertex.y());
+    }
+    glEnd();
+
+    // Draw no headland polygon
+    glLineWidth(1);
+
+    glBegin(GL_LINE_STRIP);
+
+    for (const auto& vertex: no_headlands_polygon_vertices_)
+    {
+      glColor4d(1.0, 0.0, 0.0, 1.0);
+
+      glVertex2d(vertex.x(), vertex.y());
+    }
+
+    glEnd();
+
+    // Draw vertices
+    glPointSize(9);
+    glBegin(GL_POINTS);
+
+    for (const auto& vertex: no_headlands_polygon_vertices_)
+    {
+      glColor4d(1.0, 0.0, 0.0, 1.0);
+
+      glVertex2d(vertex.x(), vertex.y());
+    }
+    glEnd();
+
     PrintInfo("OK");
   }
 
@@ -449,12 +544,6 @@ namespace mapviz_plugins
       ui_.frame->setText(source_frame_.c_str());
     }
 
-    if (node["polygon_topic"])
-    {
-      std::string polygon_topic;
-      node["polygon_topic"] >> polygon_topic;
-      ui_.topic->setText(polygon_topic.c_str());
-    }
     if (node["color"])
     {
       std::string color;
@@ -467,9 +556,6 @@ namespace mapviz_plugins
   {
     std::string frame = ui_.frame->text().toStdString();
     emitter << YAML::Key << "frame" << YAML::Value << frame;
-
-    std::string polygon_topic = ui_.topic->text().toStdString();
-    emitter << YAML::Key << "polygon_topic" << YAML::Value << polygon_topic;
 
     std::string color = ui_.color->color().name().toStdString();
     emitter << YAML::Key << "color" << YAML::Value << color;

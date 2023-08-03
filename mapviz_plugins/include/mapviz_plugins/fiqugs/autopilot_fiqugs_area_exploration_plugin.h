@@ -44,6 +44,9 @@
 // ROS libraries
 #include <ros/ros.h>
 #include <tf/transform_datatypes.h>
+#include <actionlib/client/simple_action_client.h>
+#include <autopilot_msgs/CartesianAreaAction.h>
+#include <autopilot_msgs/AutopilotPath.h>
 
 // Mapviz libraries
 #include <mapviz/map_canvas.h>
@@ -91,23 +94,35 @@ namespace mapviz_plugins
    protected Q_SLOTS:
     void PublishPolygon();
     void Clear();
+    void Cancel();
+    void Send();
     void CreatePolygon();
     void SelectFrame();
     void FrameEdited();
+
+    void waypointsCallback(const autopilot_msgs::AutopilotPath waypoints);
+
+    void noHeadlandsCallback(const geometry_msgs::PolygonStamped no_headlands_polygon);
 
    private:
     Ui::autopilot_fiqugs_area_exploration_config ui_;
     QWidget* config_widget_;
     mapviz::MapCanvas* map_canvas_;
 
-    std::string polygon_topic_;
-    ros::Publisher polygon_pub_;
+    ros::Publisher accept_mission_pub_;
+    ros::Publisher cancel_pub_;
 
-    std::vector<tf::Vector3> vertices_;
+    ros::Subscriber waypoints_subscriber_;
+    ros::Subscriber no_headlands_subscriber_;
+
+    boost::scoped_ptr<actionlib::SimpleActionClient<autopilot_msgs::CartesianAreaAction>> cartesian_area_ac_;
+
+    std::vector<tf::Vector3> vertices_, path_vertices_, no_headlands_polygon_vertices_;
     std::vector<tf::Vector3> transformed_vertices_;
 
     int selected_point_;
     bool is_mouse_down_, creating_polygon_;
+    std::string cartesian_area_namespace_;
     QPointF mouse_down_pos_;
     qint64 mouse_down_time_;
 
