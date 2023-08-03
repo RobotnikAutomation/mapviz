@@ -92,6 +92,13 @@ namespace mapviz_plugins
                      SLOT(Send()));
     QObject::connect(ui_.cancelButton, SIGNAL(clicked()), this,
                      SLOT(Cancel()));
+
+    cartesian_area_namespace_ = "autopilot_cartesian_area_navigator/cartesian_area_action";
+    cartesian_area_ac_.reset(
+       new actionlib::SimpleActionClient<autopilot_msgs::CartesianAreaAction>(node_, cartesian_area_namespace_, true));
+
+    accept_mission_pub_ = node_.advertise<std_msgs::Empty>("accept_goal", 1, true);
+    cancel_pub_ = node_.advertise<std_msgs::Empty>("cancel", 1, true);
   }
 
   AutopilotFiqugsAreaExplorationPlugin::~AutopilotFiqugsAreaExplorationPlugin()
@@ -124,16 +131,9 @@ namespace mapviz_plugins
 
   void AutopilotFiqugsAreaExplorationPlugin::PublishPolygon()
   {
-    if (polygon_topic_ != ui_.topic->text().toStdString())
-    {
-      polygon_topic_ = ui_.topic->text().toStdString();
-      polygon_pub_.shutdown();
-      polygon_pub_ = node_.advertise<geometry_msgs::PolygonStamped>(polygon_topic_, 1, true);
-    }
-
-    geometry_msgs::PolygonStamped polygon;
-    polygon.header.stamp = ros::Time::now();
-    polygon.header.frame_id = ui_.frame->text().toStdString();
+    autopilot_msgs::CartesianArea area;
+    area.target.header.stamp = ros::Time::now();
+    area.target.header.frame_id = ui_.frame->text().toStdString();
 
     for (const auto& vertex: vertices_)
     {
@@ -141,10 +141,12 @@ namespace mapviz_plugins
       point.x = vertex.x();
       point.y = vertex.y();
       point.z = 0;
-      polygon.polygon.points.push_back(point);
+      area.target.polygon.points.push_back(point);
     }
 
-    polygon_pub_.publish(polygon);
+    if(cartesian_area_ac_->isServerConnected())
+    cartesian_area_ac_->sendGoal(area);
+
     creating_polygon_ = false;
     ui_.createPolygon->setEnabled(true);
     ui_.clear->setEnabled(false);
@@ -165,6 +167,20 @@ namespace mapviz_plugins
     creating_polygon_ = true;
     ui_.createPolygon->setEnabled(false);
     ui_.clear->setEnabled(true);
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::Cancel()
+  {
+    std_msgs::Empty msg;
+    cancel_pub_.publish(msg);
+    return;
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::Send()
+  {
+    std_msgs::Empty msg;
+    accept_mission_pub_.publish(msg);
+    return;
   }
 
   void AutopilotFiqugsAreaExplorationPlugin::PrintError(const std::string& message)
