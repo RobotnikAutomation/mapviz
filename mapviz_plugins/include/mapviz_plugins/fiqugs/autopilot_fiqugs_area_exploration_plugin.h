@@ -93,12 +93,16 @@ namespace mapviz_plugins
 
    protected Q_SLOTS:
     void PublishPolygon();
-    void Clear();
+    void ClearAll();
     void Cancel();
     void Send();
-    void CreatePolygon();
+    void CreateOutterPolygon();
+    void CreateInnerPolygon();
     void SelectFrame();
     void FrameEdited();
+    void AddInnerPolygon();
+    void ClearInnerPolygon();
+
 
     void waypointsCallback(const autopilot_msgs::AutopilotPath waypoints);
 
@@ -117,11 +121,12 @@ namespace mapviz_plugins
 
     boost::scoped_ptr<actionlib::SimpleActionClient<autopilot_msgs::CartesianAreaAction>> cartesian_area_ac_;
 
-    std::vector<tf::Vector3> vertices_, path_vertices_, no_headlands_polygon_vertices_;
-    std::vector<tf::Vector3> transformed_vertices_;
+    std::vector<tf::Vector3> vertices_, path_vertices_, no_headlands_polygon_vertices_, new_inner_polygon_;
+    std::vector<tf::Vector3> transformed_vertices_, transformed_inner_vertices_;
 
+    std::vector<std::vector<tf::Vector3>> transformed_inner_polygons_vector_;
     int selected_point_;
-    bool is_mouse_down_, creating_polygon_;
+    bool is_mouse_down_, creating_outter_polygon_, creating_inner_polygon_, is_inner_vertex_;
     std::string cartesian_area_namespace_;
     QPointF mouse_down_pos_;
     qint64 mouse_down_time_;
