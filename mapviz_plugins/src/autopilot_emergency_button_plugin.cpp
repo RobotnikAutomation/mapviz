@@ -19,7 +19,9 @@ namespace mapviz_plugins
 {
   AutopilotEmergencyButtonPlugin::AutopilotEmergencyButtonPlugin():
     config_widget_(new QWidget()),
-    emergency_value_(false)
+    emergency_value_(false),
+    is_estop_(false),
+    is_rearm_(true)
   {
     ui_.setupUi(config_widget_);
 
@@ -73,22 +75,32 @@ namespace mapviz_plugins
   {
     std_msgs::Bool msg;
 
+    if(is_estop_)
+      return;
+
     msg.data = true;
 
     emergency_stop_pub_.publish(msg);
     ui_.emergencybutton->setEnabled(false);
+    is_estop_ = true;
     ui_.rearmbutton->setEnabled(true);
+    is_rearm_ = false;
   }
 
   void AutopilotEmergencyButtonPlugin::Rearm()
   {
     std_msgs::Bool msg;
 
+    if(is_rearm_)
+      return;
+
     msg.data = false;
 
     emergency_stop_pub_.publish(msg);
     ui_.emergencybutton->setEnabled(true);
+    is_estop_ = false;
     ui_.rearmbutton->setEnabled(false);
+    is_rearm_ = true;
   }
 
   void AutopilotEmergencyButtonPlugin::PrintError(const std::string& message)

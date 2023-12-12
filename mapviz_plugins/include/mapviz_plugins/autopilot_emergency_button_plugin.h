@@ -56,7 +56,7 @@ namespace mapviz_plugins
 
     ros::Publisher emergency_stop_pub_;
 
-    bool emergency_value_;
+    bool emergency_value_, is_estop_, is_rearm_;;
     };
 
     }
