@@ -62,7 +62,8 @@ namespace mapviz_plugins
     map_canvas_(NULL),
     selected_point_(-1),
     is_mouse_down_(false),
-    creating_polygon_(false),
+    creating_outter_polygon_(false),
+    creating_inner_polygon_(false),
     max_ms_(Q_INT64_C(500)),
     max_distance_(2.0)
   {
@@ -84,10 +85,16 @@ namespace mapviz_plugins
                      SLOT(FrameEdited()));
     QObject::connect(ui_.publish, SIGNAL(clicked()), this,
                      SLOT(PublishPolygon()));
-    QObject::connect(ui_.clear, SIGNAL(clicked()), this,
-                     SLOT(Clear()));
-    QObject::connect(ui_.createPolygon, SIGNAL(clicked()), this,
-                     SLOT(CreatePolygon()));
+    QObject::connect(ui_.clearAll, SIGNAL(clicked()), this,
+                     SLOT(ClearAll()));
+    QObject::connect(ui_.createOutterPolygon, SIGNAL(clicked()), this,
+                     SLOT(CreateOutterPolygon()));
+    QObject::connect(ui_.createInnerPolygon, SIGNAL(clicked()), this,
+                     SLOT(CreateInnerPolygon()));
+    QObject::connect(ui_.addInnerPolygon, SIGNAL(clicked()), this,
+                     SLOT(AddInnerPolygon()));
+    QObject::connect(ui_.clearInnerPolygon, SIGNAL(clicked()), this,
+                     SLOT(ClearInnerPolygon()));
     QObject::connect(ui_.sendButton, SIGNAL(clicked()), this,
                      SLOT(Send()));
     QObject::connect(ui_.cancelButton, SIGNAL(clicked()), this,
@@ -136,8 +143,9 @@ namespace mapviz_plugins
   {
     autopilot_msgs::CartesianAreaGoal area;
 
-    area.target.header.stamp = ros::Time::now();
-    area.target.header.frame_id = ui_.frame->text().toStdString();
+    // Fill outter polygon
+    area.outter_polygon.header.stamp = ros::Time::now();
+    area.outter_polygon.header.frame_id = ui_.frame->text().toStdString();
 
     for (const auto& vertex: vertices_)
     {
@@ -145,44 +153,116 @@ namespace mapviz_plugins
       point.x = vertex.x();
       point.y = vertex.y();
       point.z = 0;
-      area.target.polygon.points.push_back(point);
+      area.outter_polygon.polygon.points.push_back(point);
     }
 
     geometry_msgs::Point32 last_point;
     last_point.x = vertices_[0].x();
     last_point.y = vertices_[0].y();
     last_point.z = 0;
-    area.target.polygon.points.push_back(last_point);
+    area.outter_polygon.polygon.points.push_back(last_point);
+
+    // Fill inner polygons
+    for(const auto&polygon: transformed_inner_polygons_vector_)
+    {
+        geometry_msgs::PolygonStamped new_polygon;
+        new_polygon.header.stamp = ros::Time::now();
+        new_polygon.header.frame_id = ui_.frame->text().toStdString();
+
+        for (const auto& vertex: polygon)
+        {
+          geometry_msgs::Point32 point;
+          point.x = vertex.x();
+          point.y = vertex.y();
+          point.z = 0;
+          new_polygon.polygon.points.push_back(point);
+        }
+
+        geometry_msgs::Point32 last_point;
+        last_point.x = polygon[0].x();
+        last_point.y = polygon[0].y();
+        last_point.z = 0;
+        new_polygon.polygon.points.push_back(last_point);
+
+        area.inner_polygons.push_back(new_polygon);
+    }
 
     if(cartesian_area_ac_->isServerConnected())
     cartesian_area_ac_->sendGoal(area);
 
-    creating_polygon_ = false;
-    ui_.createPolygon->setEnabled(true);
+    creating_outter_polygon_ = false;
+    creating_inner_polygon_ = false;
+    ui_.createOutterPolygon->setEnabled(true);
     // ui_.clear->setEnabled(false);
     ui_.sendButton->setEnabled(true);
     ui_.cancelButton->setEnabled(true);
   }
 
-  void AutopilotFiqugsAreaExplorationPlugin::Clear()
+  void AutopilotFiqugsAreaExplorationPlugin::ClearAll()
   {
     vertices_.clear();
     path_vertices_.clear();
     transformed_vertices_.clear();
     no_headlands_polygon_vertices_.clear();
-    creating_polygon_ = false;
-    ui_.createPolygon->setEnabled(true);
-    ui_.clear->setEnabled(false);
+    new_inner_polygon_.clear();
+    transformed_inner_vertices_.clear();
+    transformed_inner_polygons_vector_.clear();
+    creating_outter_polygon_ = false;
+    creating_inner_polygon_ = false;
+    ui_.createOutterPolygon->setEnabled(true);
+    ui_.createInnerPolygon->setEnabled(false);
+    ui_.clearInnerPolygon->setEnabled(false);
+    ui_.addInnerPolygon->setEnabled(false);
+    ui_.clearAll->setEnabled(false);
     ui_.publish->setEnabled(false);
     ui_.sendButton->setEnabled(false);
     ui_.cancelButton->setEnabled(false);
   }
 
-  void AutopilotFiqugsAreaExplorationPlugin::CreatePolygon()
+  void AutopilotFiqugsAreaExplorationPlugin::ClearInnerPolygon()
   {
-    creating_polygon_ = true;
-    ui_.createPolygon->setEnabled(false);
-    ui_.clear->setEnabled(true);
+    new_inner_polygon_.clear();
+    transformed_inner_vertices_.clear();
+    creating_inner_polygon_ = false;
+    ui_.createInnerPolygon->setEnabled(true);
+    ui_.sendButton->setEnabled(true);
+    ui_.cancelButton->setEnabled(true);
+    ui_.clearAll->setEnabled(false);
+    ui_.addInnerPolygon->setEnabled(false);
+    ui_.clearInnerPolygon->setEnabled(false);
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::CreateOutterPolygon()
+  {
+    creating_outter_polygon_ = true;
+    creating_inner_polygon_ = false;
+    ui_.clearAll->setEnabled(true);
+    ui_.createOutterPolygon->setEnabled(false);
+    ui_.createInnerPolygon->setEnabled(false);
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::CreateInnerPolygon()
+  {
+    creating_outter_polygon_ = false;
+    creating_inner_polygon_ = true;
+    ui_.clearInnerPolygon->setEnabled(true);
+    ui_.clearAll->setEnabled(true);
+    ui_.createOutterPolygon->setEnabled(false);
+    ui_.createInnerPolygon->setEnabled(false);
+    ui_.publish->setEnabled(false);
+  }
+
+  void AutopilotFiqugsAreaExplorationPlugin::AddInnerPolygon()
+  {
+    transformed_inner_polygons_vector_.push_back(new_inner_polygon_);
+    new_inner_polygon_.clear();
+    transformed_inner_vertices_.clear();
+    creating_inner_polygon_ = false;
+    ui_.createInnerPolygon->setEnabled(true);
+    ui_.publish->setEnabled(true);
+    ui_.clearAll->setEnabled(true);
+    ui_.addInnerPolygon->setEnabled(false);
+    ui_.clearInnerPolygon->setEnabled(false);
   }
 
   void AutopilotFiqugsAreaExplorationPlugin::Cancel()
@@ -273,12 +353,11 @@ namespace mapviz_plugins
 
   bool AutopilotFiqugsAreaExplorationPlugin::handleMousePress(QMouseEvent* event)
   {
-    if(!this->Visible() || !creating_polygon_)
+    if(!this->Visible() || (!creating_outter_polygon_ && !creating_inner_polygon_))
     {
-      ROS_DEBUG("Ignoring mouse press, since draw polygon plugin is hidden or you are creating a polygon");
+      ROS_INFO("Ignoring mouse press, since draw polygon plugin is hidden or you are creating a polygon");
       return false;
     }
-
     selected_point_ = -1;
     int closest_point = 0;
     double closest_distance = std::numeric_limits<double>::max();
@@ -303,6 +382,23 @@ namespace mapviz_plugins
 
         if (distance < closest_distance)
         {
+          is_inner_vertex_ = false;
+          closest_distance = distance;
+          closest_point = static_cast<int>(i);
+        }
+      }
+      for (size_t i = 0; i < new_inner_polygon_.size(); i++)
+      {
+        tf::Vector3 vertex = new_inner_polygon_[i];
+        vertex = transform * vertex;
+
+        QPointF transformed = map_canvas_->FixedFrameToMapGlCoord(QPointF(vertex.x(), vertex.y()));
+
+        double distance = QLineF(transformed, point).length();
+
+        if (distance < closest_distance)
+        {
+          is_inner_vertex_ = true;
           closest_distance = distance;
           closest_point = static_cast<int>(i);
         }
@@ -332,19 +428,27 @@ namespace mapviz_plugins
     {
       if (closest_distance < 15)
       {
-        vertices_.erase(vertices_.begin() + closest_point);
-        transformed_vertices_.resize(vertices_.size());
-        return true;
+        if(is_inner_vertex_)
+        {
+          new_inner_polygon_.erase(new_inner_polygon_.begin() + closest_point);
+          transformed_inner_vertices_.resize(new_inner_polygon_.size());
+          return true;
+        }
+        else
+        {
+          vertices_.erase(vertices_.begin() + closest_point);
+          transformed_vertices_.resize(vertices_.size());
+          return true;
+        }
       }
     }
-
     return false;
   }
 
   bool AutopilotFiqugsAreaExplorationPlugin::handleMouseRelease(QMouseEvent* event)
   {
     std::string frame = ui_.frame->text().toStdString();
-    if (selected_point_ >= 0 && static_cast<size_t>(selected_point_) < vertices_.size())
+    if (selected_point_ >= 0 && (static_cast<size_t>(selected_point_) < vertices_.size() || static_cast<size_t>(selected_point_) < new_inner_polygon_.size()))
     {
 #if QT_VERSION >= 0x050000
       QPointF point = event->localPos();
@@ -357,8 +461,15 @@ namespace mapviz_plugins
         QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
         tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
         position = transform * position;
-        vertices_[selected_point_].setX(position.x());
-        vertices_[selected_point_].setY(position.y());
+        if(creating_outter_polygon_)
+        {
+          vertices_[selected_point_].setX(position.x());
+          vertices_[selected_point_].setY(position.y());
+        } else if (creating_inner_polygon_)
+        {
+          new_inner_polygon_[selected_point_].setX(position.x());
+          new_inner_polygon_[selected_point_].setY(position.y());
+        }
       }
 
       selected_point_ = -1;
@@ -394,12 +505,20 @@ namespace mapviz_plugins
         if (tf_manager_->GetTransform(frame, target_frame_, transform))
         {
           position = transform * position;
-          vertices_.push_back(position);
-          transformed_vertices_.resize(vertices_.size());
+          if(creating_outter_polygon_)
+          {
+            vertices_.push_back(position);
+            transformed_vertices_.resize(vertices_.size());
+          } else if (creating_inner_polygon_)
+          {
+            new_inner_polygon_.push_back(position);
+            transformed_inner_vertices_.resize(new_inner_polygon_.size());
+          }
           ROS_INFO("Adding vertex at %lf, %lf %s", position.x(), position.y(), frame.c_str());
         }
       }
     }
+
     is_mouse_down_ = false;
 
     return false;
@@ -407,7 +526,7 @@ namespace mapviz_plugins
 
   bool AutopilotFiqugsAreaExplorationPlugin::handleMouseMove(QMouseEvent* event)
   {
-    if (selected_point_ >= 0 && static_cast<size_t>(selected_point_) < vertices_.size())
+    if (selected_point_ >= 0 && (static_cast<size_t>(selected_point_) < vertices_.size() || static_cast<size_t>(selected_point_) < new_inner_polygon_.size()))
     {
 #if QT_VERSION >= 0x050000
       QPointF point = event->localPos();
@@ -421,12 +540,20 @@ namespace mapviz_plugins
         QPointF transformed = map_canvas_->MapGlCoordToFixedFrame(point);
         tf::Vector3 position(transformed.x(), transformed.y(), 0.0);
         position = transform * position;
-        vertices_[selected_point_].setY(position.y());
-        vertices_[selected_point_].setX(position.x());
+        if(creating_outter_polygon_)
+        {
+          vertices_[selected_point_].setY(position.y());
+          vertices_[selected_point_].setX(position.x());
+        } else if(creating_inner_polygon_)
+        {
+          new_inner_polygon_[selected_point_].setY(position.y());
+          new_inner_polygon_[selected_point_].setX(position.x());
+        }
       }
 
       return true;
     }
+
     return false;
   }
 
@@ -445,6 +572,13 @@ namespace mapviz_plugins
       transformed_vertices_[i] = transform * vertices_[i];
     }
 
+    for(size_t i = 0; i < new_inner_polygon_.size(); i++)
+    {
+      transformed_inner_vertices_[i] = transform * new_inner_polygon_[i];
+    }
+
+    // OUTER POLYGON
+    // Main lines
     glLineWidth(1);
     const QColor color = ui_.color->color();
     glColor4d(color.redF(), color.greenF(), color.blueF(), 1.0);
@@ -454,32 +588,96 @@ namespace mapviz_plugins
     {
       glVertex2d(vertex.x(), vertex.y());
     }
-
     glEnd();
 
+    // Last line
     glBegin(GL_LINES);
-
     glColor4d(color.redF(), color.greenF(), color.blueF(), 0.25);
-
     if (transformed_vertices_.size() > 2)
     {
       glVertex2d(transformed_vertices_.front().x(), transformed_vertices_.front().y());
       glVertex2d(transformed_vertices_.back().x(), transformed_vertices_.back().y());
       ui_.publish->setEnabled(true);
+      ui_.createInnerPolygon->setEnabled(true);
     }
-
     glEnd();
 
-    // Draw vertices
+    // Vertices
     glPointSize(9);
     glBegin(GL_POINTS);
-
+    glColor4d(color.redF(), color.greenF(), color.blueF(), 1.0);
     for (const auto& vertex: transformed_vertices_)
     {
       glVertex2d(vertex.x(), vertex.y());
     }
     glEnd();
 
+    // CURRENT INNER POLYGON
+    // Main lines
+    glLineWidth(1);
+    glColor4d(1.0, 1.0, 0.0, 1.0);
+    glBegin(GL_LINE_STRIP);
+    for (const auto& vertex: transformed_inner_vertices_)
+    {
+      glVertex2d(vertex.x(), vertex.y());
+    }
+    glEnd();
+
+    // Last line
+    glBegin(GL_LINES);
+    glColor4d(1.0, 1.0, 0.0, 0.25);
+    if (transformed_inner_vertices_.size() > 2)
+    {
+      glVertex2d(transformed_inner_vertices_.front().x(), transformed_inner_vertices_.front().y());
+      glVertex2d(transformed_inner_vertices_.back().x(), transformed_inner_vertices_.back().y());
+      ui_.addInnerPolygon->setEnabled(true);
+    }
+    glEnd();
+
+    // Vertices
+    glBegin(GL_POINTS);
+    glColor4d(1.0, 1.0, 0.0, 0.25);
+    for (const auto& vertex: transformed_inner_vertices_)
+    {
+      glVertex2d(vertex.x(), vertex.y());
+    }
+    glEnd();
+
+    // INNER POLYGON VECTOR
+    // Main lines
+    for(const auto& polygon: transformed_inner_polygons_vector_)
+    {
+        glLineWidth(1);
+        glColor4d(1.0, 1.0, 0.0, 1.0);
+        glBegin(GL_LINE_STRIP);
+        for (const auto& vertex: polygon)
+        {
+          glVertex2d(vertex.x(), vertex.y());
+        }
+        glEnd();
+    }
+
+    // Last lines
+    glBegin(GL_LINES);
+    glColor4d(1.0, 1.0, 0.0, 1.0);
+    for(int i=0; i < transformed_inner_polygons_vector_.size(); i++)
+    {
+      glVertex2d(transformed_inner_polygons_vector_[i].front().x(), transformed_inner_polygons_vector_[i].front().y());
+      glVertex2d(transformed_inner_polygons_vector_[i].back().x(), transformed_inner_polygons_vector_[i].back().y());
+    }
+    glEnd();
+
+    // Vertices
+    glBegin(GL_POINTS);
+    glColor4d(1.0, 1.0, 0.0, 0.25);
+    for(const auto& polygon: transformed_inner_polygons_vector_)
+    {
+        for (const auto& vertex: polygon)
+        {
+          glVertex2d(vertex.x(), vertex.y());
+        }
+    }
+    glEnd();
 
     // Draw path
     glLineWidth(1);

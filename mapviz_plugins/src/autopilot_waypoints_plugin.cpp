@@ -510,6 +510,7 @@ namespace mapviz_plugins
   {
     std_msgs::Empty msg;
     cancel_pub_.publish(msg);
+    Clear();
     map_canvas_->installEventFilter(this);
     return;
   }
