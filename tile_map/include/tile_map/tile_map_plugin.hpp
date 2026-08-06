@@ -83,8 +83,9 @@ namespace tile_map
     void DeleteTileSource();
     void SelectSource(const QString& source_name);
     void SaveCustomSource();
-    void MapHorizontalOffset(int value);
-    void MapVerticalOffset(int value);
+    void MapHorizontalOffset(double value);
+    void MapVerticalOffset(double value);
+    void MapOffsetStep(double step);
     void ResetTileCache();
 
   private:
@@ -119,6 +120,9 @@ namespace tile_map
     static std::string NAME_KEY;
     static std::string SOURCE_KEY;
     static std::string TYPE_KEY;
+    static std::string OFFSET_X_KEY;
+    static std::string OFFSET_Y_KEY;
+    static std::string OFFSET_STEP_KEY;
     static QString BING_NAME;
     static QString CARTO_NAME;
     static QString STAMEN_TERRAIN_NAME;
