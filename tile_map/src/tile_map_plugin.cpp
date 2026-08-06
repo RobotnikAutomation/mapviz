@@ -141,6 +141,7 @@ namespace tile_map
     QObject::connect(ui_.vertical_offset, SIGNAL(valueChanged(double)), this, SLOT(MapVerticalOffset(double)));
     QObject::connect(ui_.horizontal_offset, SIGNAL(valueChanged(double)), this, SLOT(MapHorizontalOffset(double)));
     QObject::connect(ui_.offset_step, SIGNAL(valueChanged(double)), this, SLOT(MapOffsetStep(double)));
+    QObject::connect(ui_.reset_offset_button, SIGNAL(clicked()), this, SLOT(ResetOffset()));
   }
 
   void TileMapPlugin::DeleteTileSource()
@@ -297,6 +298,12 @@ namespace tile_map
   void TileMapPlugin::MapVerticalOffset(double value)
   {
     offset_y_ = -value;
+  }
+
+  void TileMapPlugin::ResetOffset()
+  {
+    ui_.horizontal_offset->setValue(0.0);
+    ui_.vertical_offset->setValue(0.0);
   }
 
   void TileMapPlugin::MapOffsetStep(double step)

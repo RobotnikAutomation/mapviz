@@ -202,22 +202,33 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1" colspan="3">
+   <item row="7" column="1" colspan="2">
     <widget class="QDoubleSpinBox" name="vertical_offset">
      <property name="minimum">
-      <double>-100.000000000000000</double>
+      <double>-100.00</double>
      </property>
      <property name="maximum">
-      <double>100.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
+      <double>100.00</double>
      </property>
      <property name="decimals">
       <number>2</number>
      </property>
      <property name="value">
-      <double>0.000000000000000</double>
+      <double>0.00</double>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3" rowspan="2">
+    <widget class="QPushButton" name="reset_offset_button">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Reset
+Offset</string>
      </property>
     </widget>
    </item>
@@ -234,22 +245,19 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="1" colspan="3">
+   <item row="8" column="1" colspan="2">
     <widget class="QDoubleSpinBox" name="horizontal_offset">
      <property name="minimum">
-      <double>-100.000000000000000</double>
+      <double>-100.00</double>
      </property>
      <property name="maximum">
-      <double>100.000000000000000</double>
-     </property>
-     <property name="singleStep">
-      <double>0.100000000000000</double>
+      <double>100.00</double>
      </property>
      <property name="decimals">
       <number>2</number>
      </property>
      <property name="value">
-      <double>0.000000000000000</double>
+      <double>0.00</double>
      </property>
     </widget>
    </item>

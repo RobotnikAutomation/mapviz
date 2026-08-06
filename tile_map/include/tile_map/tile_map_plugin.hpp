@@ -86,6 +86,7 @@ namespace tile_map
     void MapHorizontalOffset(double value);
     void MapVerticalOffset(double value);
     void MapOffsetStep(double step);
+    void ResetOffset();
     void ResetTileCache();
 
   private:
