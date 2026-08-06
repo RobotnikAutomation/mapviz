@@ -60,6 +60,9 @@ namespace tile_map
   std::string TileMapPlugin::NAME_KEY = "name";
   std::string TileMapPlugin::SOURCE_KEY = "source";
   std::string TileMapPlugin::TYPE_KEY = "type";
+  std::string TileMapPlugin::OFFSET_X_KEY = "offset_x";
+  std::string TileMapPlugin::OFFSET_Y_KEY = "offset_y";
+  std::string TileMapPlugin::OFFSET_STEP_KEY = "offset_step";
   QString TileMapPlugin::BING_NAME = "Bing Maps (terrain)";
   QString TileMapPlugin::CARTO_NAME = "Carto";
   QString TileMapPlugin::STAMEN_TERRAIN_NAME = "Stamen (terrain)";
@@ -135,6 +138,10 @@ namespace tile_map
     QObject::connect(ui_.source_combo, SIGNAL(activated(const QString&)), this, SLOT(SelectSource(const QString&)));
     QObject::connect(ui_.save_button, SIGNAL(clicked()), this, SLOT(SaveCustomSource()));
     QObject::connect(ui_.reset_cache_button, SIGNAL(clicked()), this, SLOT(ResetTileCache()));
+    QObject::connect(ui_.vertical_offset, SIGNAL(valueChanged(double)), this, SLOT(MapVerticalOffset(double)));
+    QObject::connect(ui_.horizontal_offset, SIGNAL(valueChanged(double)), this, SLOT(MapHorizontalOffset(double)));
+    QObject::connect(ui_.offset_step, SIGNAL(valueChanged(double)), this, SLOT(MapOffsetStep(double)));
+    QObject::connect(ui_.reset_offset_button, SIGNAL(clicked()), this, SLOT(ResetOffset()));
   }
 
   void TileMapPlugin::DeleteTileSource()
@@ -283,6 +290,28 @@ namespace tile_map
     tile_map_.ResetCache();
   }
 
+  void TileMapPlugin::MapHorizontalOffset(double value)
+  {
+    offset_x_ = -value;
+  }
+
+  void TileMapPlugin::MapVerticalOffset(double value)
+  {
+    offset_y_ = -value;
+  }
+
+  void TileMapPlugin::ResetOffset()
+  {
+    ui_.horizontal_offset->setValue(0.0);
+    ui_.vertical_offset->setValue(0.0);
+  }
+
+  void TileMapPlugin::MapOffsetStep(double step)
+  {
+    ui_.vertical_offset->setSingleStep(step);
+    ui_.horizontal_offset->setSingleStep(step);
+  }
+
   void TileMapPlugin::PrintError(const std::string& message)
   {
     if (message == ui_.status->text().toStdString())
@@ -364,7 +393,7 @@ namespace tile_map
         tile_map_.SetView(center.y(), center.x(), scale, canvas_->width(), canvas_->height());
         RCLCPP_DEBUG(Logger(), "TileMapPlugin::Draw: Successfully set view");
       }
-      tile_map_.Draw();
+      tile_map_.Draw(offset_x_, offset_y_);
     }
   }
 
@@ -455,6 +484,24 @@ namespace tile_map
       
       SelectSource(QString::fromStdString(source));
     }
+
+    if (node[OFFSET_X_KEY])
+    {
+      double val = node[OFFSET_X_KEY].as<double>();
+      ui_.horizontal_offset->setValue(-val);
+    }
+    if (node[OFFSET_Y_KEY])
+    {
+      double val = node[OFFSET_Y_KEY].as<double>();
+      ui_.vertical_offset->setValue(-val);
+    }
+    if (node[OFFSET_STEP_KEY])
+    {
+      double step = node[OFFSET_STEP_KEY].as<double>();
+      ui_.offset_step->setValue(step);
+      ui_.horizontal_offset->setSingleStep(step);
+      ui_.vertical_offset->setSingleStep(step);
+    }
   }
 
   void TileMapPlugin::SaveConfig(YAML::Emitter& emitter, const std::string&)
@@ -487,6 +534,10 @@ namespace tile_map
 
     std::string combo_str = TrimString(ui_.source_combo->currentText().toStdString());
     emitter << YAML::Key << SOURCE_KEY << YAML::Value << combo_str;
+
+    emitter << YAML::Key << OFFSET_X_KEY << YAML::Value << offset_x_;
+    emitter << YAML::Key << OFFSET_Y_KEY << YAML::Value << offset_y_;
+    emitter << YAML::Key << OFFSET_STEP_KEY << YAML::Value << ui_.offset_step->value();
   }
 
   void TileMapPlugin::selectTileSource(const std::shared_ptr<TileSource>& tile_source)
