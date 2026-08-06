@@ -135,6 +135,8 @@ namespace tile_map
     QObject::connect(ui_.source_combo, SIGNAL(activated(const QString&)), this, SLOT(SelectSource(const QString&)));
     QObject::connect(ui_.save_button, SIGNAL(clicked()), this, SLOT(SaveCustomSource()));
     QObject::connect(ui_.reset_cache_button, SIGNAL(clicked()), this, SLOT(ResetTileCache()));
+    QObject::connect(ui_.vertical_offset, SIGNAL(valueChanged(int)), this, SLOT(MapVerticalOffset(int)));
+    QObject::connect(ui_.horizontal_offset, SIGNAL(valueChanged(int)), this, SLOT(MapHorizontalOffset(int)));
   }
 
   void TileMapPlugin::DeleteTileSource()
@@ -283,6 +285,16 @@ namespace tile_map
     tile_map_.ResetCache();
   }
 
+  void TileMapPlugin::MapHorizontalOffset(int value)
+  {
+    offset_x_ = -value;
+  }
+
+  void TileMapPlugin::MapVerticalOffset(int value)
+  {
+    offset_y_ = -value;
+  }
+
   void TileMapPlugin::PrintError(const std::string& message)
   {
     if (message == ui_.status->text().toStdString())
@@ -364,7 +376,7 @@ namespace tile_map
         tile_map_.SetView(center.y(), center.x(), scale, canvas_->width(), canvas_->height());
         RCLCPP_DEBUG(Logger(), "TileMapPlugin::Draw: Successfully set view");
       }
-      tile_map_.Draw();
+      tile_map_.Draw(offset_x_/10, offset_y_/10);
     }
   }
 

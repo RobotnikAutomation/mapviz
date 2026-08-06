@@ -258,14 +258,14 @@ namespace tile_map
             const tf2::Vector3& bl = tile.points_t[(row + 1) * (tile.subdiv_count + 1) + col];
 
             // Triangle 1
-            glTexCoord2f(u_0, v_0); glVertex2d(tl.x(), tl.y());
-            glTexCoord2f(u_1, v_0); glVertex2d(tr.x(), tr.y());
-            glTexCoord2f(u_1, v_1); glVertex2d(br.x(), br.y());
+            glTexCoord2f(u_0, v_0); glVertex2d(tl.x()+h_offset_, tl.y()+v_offset_);
+            glTexCoord2f(u_1, v_0); glVertex2d(tr.x()+h_offset_, tr.y()+v_offset_);
+            glTexCoord2f(u_1, v_1); glVertex2d(br.x()+h_offset_, br.y()+v_offset_);
 
             // Triangle 2
-            glTexCoord2f(u_0, v_0); glVertex2d(tl.x(), tl.y());
-            glTexCoord2f(u_1, v_1); glVertex2d(br.x(), br.y());
-            glTexCoord2f(u_0, v_1); glVertex2d(bl.x(), bl.y());
+            glTexCoord2f(u_0, v_0); glVertex2d(tl.x()+h_offset_, tl.y()+v_offset_);
+            glTexCoord2f(u_1, v_1); glVertex2d(br.x()+h_offset_, br.y()+v_offset_);
+            glTexCoord2f(u_0, v_1); glVertex2d(bl.x()+h_offset_, bl.y()+v_offset_);
           }
         }
 
@@ -276,8 +276,10 @@ namespace tile_map
     }
   }
 
-  void TileMapView::Draw()
+  void TileMapView::Draw(float offset_x, float offset_y)
   {
+    h_offset_ = offset_x;
+    v_offset_ = offset_y;
     if (!gl_initialized_) {
       initializeOpenGLFunctions();
       gl_initialized_ = true;
